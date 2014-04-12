@@ -3,6 +3,9 @@
 #include "socket_ctrl.h"
 #include "thread_func.h"
 
+#define COMMAND_ACCEPT	"accept"
+#define COMMAND_REJECT	"reject"
+
 #define COMMAND_SUCCESS "success"
 #define COMMAND_FAILED  "failed"
 #define COMMAND_ERROR	"error"
@@ -10,6 +13,7 @@
 
 //Command Handle
 typedef int (*command_handler)(SOCKET s);
+#define COMMAND_HANDLER(func_name) _##func_name##_
 #define COMMAND_HANDLER_FUNC(func_name) int _##func_name##_ (SOCKET s)
 
 typedef struct

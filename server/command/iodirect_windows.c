@@ -85,10 +85,17 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
     int *tmp = (int*)p;
     HANDLE out = *(HANDLE*)&tmp[0];
     SOCKET s = *(SOCKET*)&tmp[1];
-    unsigned long t;
+	HANDLE proc = *(HANDLE*)&tmp[2];
+    DWORD t;
     char buf[IODIRECT_READBUF+1];
     while(PeekNamedPipe(out,buf,IODIRECT_READBUF,&t,NULL,NULL))
     {
+		//Check if Proc close
+		DWORD tt;
+		if(!(GetExitCodeProcess(proc,&tt) && tt==STILL_ACTIVE))
+		{
+			break;
+		}
         if(t>0)
         {
             ReadFile(out,buf,IODIRECT_READBUF,&t,NULL);
@@ -106,15 +113,15 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
     }
 
     socket_send(s,COMMAND_QUIT,sizeof(COMMAND_QUIT),0);
-    socket_close(s);
+	socket_close(s);
     return 0;
 }
 
-COMMAND_HANDLER_FUNC(iodirect)
+COMMAND_HANDLER_FUNC(ioredirect)
 {
-	char read_buf[IODIRECT_READBUF+1]={0};
 	while(1)
 	{
+		char read_buf[IODIRECT_READBUF+1]={0};
 		HANDLE in=NULL,out=NULL,proc=NULL;
 		DWORD pid=0;
 		int nread = socket_recv(s,read_buf,IODIRECT_READBUF,0);
@@ -123,6 +130,7 @@ COMMAND_HANDLER_FUNC(iodirect)
 			//Connect error
 			break;
 		}
+		sscanf(read_buf,"%s",read_buf);
 		proc= RedirectStreamOpen(read_buf,&in,&out,&pid);
 		if(proc==NULL)
 		{
@@ -133,9 +141,10 @@ COMMAND_HANDLER_FUNC(iodirect)
 		socket_send(s,COMMAND_SUCCESS,sizeof(COMMAND_SUCCESS),0);
 
 		//Send Handle and socket to thread
-		int tmp[2];
+		int tmp[3];
         tmp[0] = *(int*)&out;
         tmp[1] = *(int*)&s;
+		tmp[2] = *(int*)&proc;
 
 		//Create read echo thread
 		CloseHandle(CreateThread(NULL,0,ReadEchoToSocket,tmp,0,NULL));
@@ -147,12 +156,16 @@ COMMAND_HANDLER_FUNC(iodirect)
 			DWORD t;
             if(!WriteFile(in,read_buf,nread,&t,NULL))
             {
-                socket_send(s,COMMAND_ERROR,sizeof(COMMAND_ERROR),0);
+                socket_send(s,COMMAND_QUIT,sizeof(COMMAND_QUIT),0);
                 break;
             }
 		}
 		//Kill Process
 		TerminateProcess(proc,0);
+		CloseHandle(in);
+		CloseHandle(out);
+		CloseHandle(proc);
+		break;
 	}
 	return 0;
 }

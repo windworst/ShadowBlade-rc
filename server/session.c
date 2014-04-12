@@ -1,13 +1,14 @@
 #include "session.h"
 
-#include <string.h>
-
 #define COMMAND_LENGTH 32
+
+extern COMMAND_HANDLER_FUNC(newconnect);
+extern COMMAND_HANDLER_FUNC(ioredirect);
 
 command_proc command_proc_list[]=
 {
-	{"newconnect",NULL},
-	{"ioredirect",NULL},
+	{"newconnect",COMMAND_HANDLER(newconnect)},
+	{"ioredirect",COMMAND_HANDLER(ioredirect)},
 };
 
 command_handler get_command_handler(const char* command)
@@ -25,16 +26,23 @@ command_handler get_command_handler(const char* command)
 
 int session_handle(SOCKET s)
 {
-	char command[COMMAND_LENGTH+1]={0};
-	while(socket_recv(s,command,COMMAND_LENGTH,0)>0)
+	
+	while(1)
 	{
+		char command[COMMAND_LENGTH+1]={0};
+		if(socket_recv(s,command,COMMAND_LENGTH,0)<=0)
+		{
+			break;
+		}
 		//Get command handler
 		command_handler hldr = get_command_handler(command);
 		if(hldr==NULL)
 		{
 			//undefined command
-			socket_send(s,COMMAND_ERROR,sizeof(COMMAND_ERROR),0);
+			socket_send(s,COMMAND_REJECT,sizeof(COMMAND_REJECT),0);
+			continue;
 		}
+		socket_send(s,COMMAND_ACCEPT,sizeof(COMMAND_ACCEPT),0);
 		if(!hldr(s))
 		{
 			//command_handler cut down session

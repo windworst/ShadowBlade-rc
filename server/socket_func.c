@@ -27,6 +27,7 @@ static export_func s_socket_func_list[] =
 	{"recv",			(void*)&d_recv},
 	{"getsockopt",		(void*)&d_getsockopt},
 	{"setsockopt",		(void*)&d_setsockopt},
+	{"getpeername",		(void*)&d_getpeername},
 	{"closesocket",		(void*)&d_closesocket},
 	{"WSAStartup",		(void*)&d_WSAStartup},
 	{"WSACleanup",		(void*)&d_WSACleanup},

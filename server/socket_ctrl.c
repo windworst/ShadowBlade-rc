@@ -22,48 +22,153 @@ long gethost(const char* name)
     return i;
 }
 
+struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa)
+{
+	struct sockaddr_in* sa_in = (struct sockaddr_in*)sa;
+	sa_in->sin_family = AF_INET;
+	sa_in->sin_port = socket_htons(port);
+	sa_in->sin_addr.s_addr = gethost(host);
+	if(sa_in->sin_addr.s_addr==-1)return NULL;
+	return sa;
+}
+
+struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
+{
+	char* port_str = strstr(str,":");
+	if(port_str==NULL)
+	{
+		return NULL;
+	}
+	*port_str = '\0';
+	int port;
+	if(sscanf(port_str+1,"%d",&port)!=1 || (port<0||port>=65536))
+	{
+		*port_str = ':';
+		return NULL;
+	}
+	struct sockaddr* result = make_sockaddr(str,port,sa);
+	*port_str = ':';
+	return result;
+}
+
+#define HTTP_HEAD "http://"
+#define URL_LEN 256
+#define RECV_BUFLEN 8192
+struct sockaddr* get_sockaddr_by_url(char* url,struct sockaddr* sa,char* name,int timewait)
+{
+	//Connect HTTP server
+	int port = 80;
+	if(strncmp(url,HTTP_HEAD,sizeof(HTTP_HEAD)-1)!=0)return NULL;
+
+	char url_buf[URL_LEN] = {0};
+	memcpy(url_buf,url,URL_LEN);
+
+	char * host = url_buf + sizeof(HTTP_HEAD)-1;
+	char * port_str = strstr(host,":");
+	char * file_str = strstr(host,"/");
+
+	if(port_str)port_str[0] = '\0';
+	if(file_str)file_str[0] = '\0';
+
+	if(port_str!=NULL)
+	{
+		port = atoi(port_str+1);
+		if(port<=0 || port >= 65536)
+		{
+			return NULL;
+		}
+	}
+
+	//Send HTTP-get
+	char sndstr[URL_LEN*2 + 30]={0};
+	sprintf(sndstr,"GET /%s HTTP/1.1\nHost: %s:%d\n\n\n\n",file_str!=NULL?file_str+1:" ",host,port);
+	SOCKET s = tcp_connect(make_sockaddr(host,port,sa),timewait);
+	if(s==-1)return NULL;
+	socket_send(s,sndstr,strlen(sndstr)+1,0);
+
+	//Read page Data
+	char recv_buf[RECV_BUFLEN+1]={0};
+	int namelen = strlen(name);
+	int length;
+	while(length = socket_recv(s,recv_buf,RECV_BUFLEN,0),length>0)
+	{
+		recv_buf[length]='\0';
+
+		//get string start & end;
+		char *addr,*end;
+		if(
+				(addr = strstr(recv_buf,name),addr==NULL)
+				|| addr[namelen] != '('
+				||(end = strstr(addr,")"),end==NULL)
+		  )
+			continue;
+
+		//if find
+		addr += namelen+1;
+
+		//find port value
+		char *c = addr;
+		while(c<end)
+		{
+			if(*c==':')break;
+			++c;
+		}
+		*end = '\0';
+		*c = '\0';
+		if(
+				c<end
+				&& (port = atoi(c+1),(port<=0 || port>=65536))
+		  )
+		{
+			continue;
+		}
+
+		//Get it
+		struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;
+		sa_in->sin_addr.s_addr = gethost(addr);
+		sa_in->sin_port = socket_htons(port);
+		return sa;
+	}
+	return NULL;
+}
+
 /*!
  * @brief:		get connect sockfd by host,port.
  * @author:		xbw
  * @date:		2014_4_12
- * @args:		hostname in const char* string,connection port,connect timewait
+ * @args:		struct sockaddr* sa,connect timewait
  * @return:		connect sockfd, or -1 failed
  */
-SOCKET tcp_connect(const char* host,int port,int time_wait)
+SOCKET tcp_connect(struct sockaddr* sa,int time_wait)
 {
 	//setting connect sockaddr
-    struct sockaddr_in sa;
-    sa.sin_family = AF_INET;
-    sa.sin_port = socket_htons(port);
-    sa.sin_addr.s_addr = gethost(host);
- 
-    if(sa.sin_addr.s_addr==-1)return -1;
-    SOCKET s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-    if(s==-1)return -1;
+	if(sa==NULL)return -1;
+	SOCKET s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+	if(s==-1)return -1;
 
 	//setting NBlock
-    unsigned long ok = 1;
-    socket_ioctl(s,FIONBIO,&ok);
-    socket_connect(s,(struct sockaddr*)&sa,sizeof(sa));
- 
+	unsigned long ok = 1;
+	socket_ioctl(s,FIONBIO,&ok);
+	socket_connect(s,sa,sizeof(*sa));
+
 	//check connect socketfd usable
-    fd_set set;
-    FD_ZERO(&set);
-    FD_SET(s,&set);
- 
-    struct timeval tv;
-    tv.tv_sec = time_wait;
-    tv.tv_usec = 0;
-    if(socket_select(0,NULL,&set,NULL,&tv)<=0)
-    {
-        socket_close(s);
-        return -1;
-    }
+	fd_set set;
+	FD_ZERO(&set);
+	FD_SET(s,&set);
+
+	struct timeval tv;
+	tv.tv_sec = time_wait;
+	tv.tv_usec = 0;
+	if(socket_select(0,NULL,&set,NULL,&tv)<=0)
+	{
+		socket_close(s);
+		return -1;
+	}
 
 	//Setting NBlock
-    ok = 0;
-    socket_ioctl(s,FIONBIO,&ok);
-    return s;
+	ok = 0;
+	socket_ioctl(s,FIONBIO,&ok);
+	return s;
 }
 
 #ifdef SOCK_CTRL_MAIN
