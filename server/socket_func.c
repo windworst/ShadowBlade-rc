@@ -1,7 +1,12 @@
-#include <winsock2.h>
+#include "socket_func.h"
+
+//Load Windows socket func
+
 #include <windows.h>
 
-#include "socket_func.h"
+/*
+ * function_name_string: dynamic_function_address
+ */
 
 typedef struct
 {
@@ -24,15 +29,22 @@ static export_func s_socket_func_list[] =
 	{"setsockopt",		(void*)&d_setsockopt},
 	{"closesocket",		(void*)&d_closesocket},
 	{"WSAStartup",		(void*)&d_WSAStartup},
+	{"WSACleanup",		(void*)&d_WSACleanup},
 	{"__WSAFDIsSet",	(void*)&d_WSAFDIsSet},
 	{"select",			(void*)&d_select},
 	{"gethostbyname",	(void*)&d_gethostbyname},
+	{"ioctlsocket",		(void*)&d_ioctlsocket},
 };
 
 
 static HMODULE s_ws2_32_dll=NULL;
 
-void socket_func_clean()
+/*!
+ *	@brief:		clean dynamic socket function
+ *	@author:	xbw
+ *	@date:		2014_4_12
+ */
+void s_func_clean()
 {
 	if(s_ws2_32_dll!=NULL)
 	{
@@ -41,7 +53,13 @@ void socket_func_clean()
 	}
 }
 
-int socket_func_init()
+/*!
+ *	@brief:		initialize dynamic socket function
+ *	@author:	xbw
+ *	@date:		2014_4_12
+ *	@return:	success >0 , load library failed =-1,load function failed =0
+ */
+int s_func_init()
 {
 	socket_func_clean();
 
@@ -63,7 +81,34 @@ int socket_func_init()
 	return 1;
 }
 
-#ifdef SOCKET_FUNC_TEST_MAIN
+/*!
+ *	@brief:		initialize dynamic socket function and wsa socket
+ *	@author:	xbw
+ *	@date:		2014_4_12
+ *	@return:	success >0 , failed =0
+ */
+int s_socket_init()
+{
+	if(socket_func_init()<=0)
+	{
+		return 0;
+	}
+    socket_wsa_init();
+	return 1;
+}
+
+/*!
+ *	@brief:		clean dynamic func and wsa socket
+ *	@author:	xbw
+ *	@date:		2014_4_12
+ */
+void s_socket_clean()
+{
+	socket_cleanup();
+	socket_func_clean();
+}
+
+#ifdef SOCKET_FUNC_MAIN
 #include <stdio.h>
 int main()
 {
@@ -73,3 +118,5 @@ int main()
    return 0;
 }
 #endif
+
+//End
