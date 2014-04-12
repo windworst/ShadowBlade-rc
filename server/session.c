@@ -25,8 +25,7 @@ command_handler get_command_handler(const char* command)
 }
 
 int session_handle(SOCKET s)
-{
-	
+{	
 	while(1)
 	{
 		char command[COMMAND_LENGTH+1]={0};

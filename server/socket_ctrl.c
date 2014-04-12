@@ -22,6 +22,13 @@ long gethost(const char* name)
     return i;
 }
 
+/*!
+ * @brief:			get connect messsage from host and port
+ * @author:			xbw
+ * @date:			2014_4_12
+ * @args:			host,port, sockaddr* sa
+ * @return:			sockaddr *
+ */
 struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa)
 {
 	struct sockaddr_in* sa_in = (struct sockaddr_in*)sa;
@@ -32,6 +39,13 @@ struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa)
 	return sa;
 }
 
+/*!
+ * @brief:			get connect messsage from addr:port string
+ * @author:			xbw
+ * @date:			2014_4_12
+ * @args:			string, sockaddr* sa
+ * @return:			sockaddr *
+ */
 struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
 {
 	char* port_str = strstr(str,":");
@@ -51,10 +65,17 @@ struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
 	return result;
 }
 
+/*!
+ * @brief:			get connect messsage from url page
+ * @author:			xbw
+ * @date:			2014_4_13
+ * @args:			url,server name,timewait of connection,sockaddr
+ * @return:			sockaddr *
+ */
 #define HTTP_HEAD "http://"
 #define URL_LEN 256
 #define RECV_BUFLEN 8192
-struct sockaddr* get_sockaddr_by_url(char* url,struct sockaddr* sa,char* name,int timewait)
+struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct sockaddr* sa)
 {
 	//Connect HTTP server
 	int port = 80;

@@ -11,6 +11,12 @@ raw_config g_raw_config=
 };
 config g_config;
 
+/*!
+ * @brief:			read config from raw_config
+ * @author:			xbw
+ * @date:			2014_4_12
+ * @args:			raw_config(in), config(out)
+ */
 void read_config(raw_config* raw,config* conf)
 {
 	conf->url = raw->url;
