@@ -106,7 +106,7 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
     }
 
     socket_send(s,COMMAND_QUIT,sizeof(COMMAND_QUIT),0);
-    socket_closesocket(s);
+    socket_close(s);
     return 0;
 }
 
@@ -142,10 +142,10 @@ COMMAND_HANDLER_FUNC(iodirect)
 		Sleep(IODIRECT_TIMEWAIT);
 
 		//Get remote command
-		while(nread = d_recv(s,buf,BUF_LEN,0),nread>0)
+		while(nread = d_recv(s,read_buf,IODIRECT_READBUF,0),nread>0)
 		{
 			DWORD t;
-            if(!WriteFile(in,buf,nread,&t,NULL))
+            if(!WriteFile(in,read_buf,nread,&t,NULL))
             {
                 socket_send(s,COMMAND_ERROR,sizeof(COMMAND_ERROR),0);
                 break;

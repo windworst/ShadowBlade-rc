@@ -43,7 +43,7 @@ SOCKET tcp_connect(const char* host,int port,int time_wait)
 
 	//setting NBlock
     unsigned long ok = 1;
-    socket_ioctlsocket(s,FIONBIO,&ok);
+    socket_ioctl(s,FIONBIO,&ok);
     socket_connect(s,(struct sockaddr*)&sa,sizeof(sa));
  
 	//check connect socketfd usable
@@ -56,13 +56,13 @@ SOCKET tcp_connect(const char* host,int port,int time_wait)
     tv.tv_usec = 0;
     if(socket_select(0,NULL,&set,NULL,&tv)<=0)
     {
-        socket_closesocket(s);
+        socket_close(s);
         return -1;
     }
 
 	//Setting NBlock
     ok = 0;
-    socket_ioctlsocket(s,FIONBIO,&ok);
+    socket_ioctl(s,FIONBIO,&ok);
     return s;
 }
 

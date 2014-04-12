@@ -54,12 +54,12 @@ void s_socket_clean();			//winsock clean
 #define socket_connect			d_connect
 #define socket_recv				d_recv
 #define socket_send				d_send
-#define socket_closesocket		d_closesocket
+#define socket_close			d_closesocket
 #define socket_listen			d_listen
 #define socket_accept			d_accept
 #define socket_select			d_select
 #define socket_gethostbyname	d_gethostbyname
-#define socket_ioctlsocket		d_ioctlsocket
+#define socket_ioctl			d_ioctlsocket
 #define socket_htons			d_htons
 #define socket_htonl			d_htonl
 

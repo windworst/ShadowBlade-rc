@@ -47,7 +47,8 @@ int session_handle(SOCKET s)
 
 THREAD_CALLBACK_FUNC(session_handle_inthread)
 {
-	session_handle((SOCKET)arg);
+	SOCKET s = (SOCKET)arg;
+	session_handle(s);
 	socket_close(s);
 	return 0;
 }

@@ -10,7 +10,7 @@
 
 //Command Handle
 typedef int (*command_handler)(SOCKET s);
-#define COMMAND_HANDLER_FUNC(func_name) int ##func_name##(SOCKET s)
+#define COMMAND_HANDLER_FUNC(func_name) int _##func_name##_ (SOCKET s)
 
 typedef struct
 {
