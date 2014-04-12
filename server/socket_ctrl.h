@@ -5,6 +5,7 @@
 int socket_init();
 void socket_clean();
 
+void set_keepalive(SOCKET s,int timeout);
 long gethost(const char* name);
 struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa);
 struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa);

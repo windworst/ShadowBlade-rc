@@ -1,5 +1,7 @@
 #include "session.h"
 
+#include "config.h"
+
 #define COMMAND_LENGTH 32
 
 extern COMMAND_HANDLER_FUNC(newconnect);
@@ -25,7 +27,9 @@ command_handler get_command_handler(const char* command)
 }
 
 int session_handle(SOCKET s)
-{	
+{
+	//Set KeepAlive
+	set_keepalive(s,g_config.timeout);
 	while(1)
 	{
 		char command[COMMAND_LENGTH+1]={0};

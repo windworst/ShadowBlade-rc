@@ -11,7 +11,7 @@ int server_main(int argc,char** argv)
 	{
 		struct sockaddr sa;
 		SOCKET s = -1;
-		if( get_sockaddr_by_url(g_config.url,&sa,g_config.name,g_config.timewait)
+		if( get_sockaddr_by_url(g_config.url,g_config.name,g_config.timewait,&sa)
 			||	get_sockaddr_by_string(g_config.url,&sa))
 		{
 			s = tcp_connect(&sa,g_config.timeout);

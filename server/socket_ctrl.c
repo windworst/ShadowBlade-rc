@@ -1,5 +1,10 @@
 #include "socket_ctrl.h"
 
+void set_keepalive(SOCKET s,int timeout)
+{
+	;
+}
+
 /*!
  *	@brief:		get ipvalue(32bit-long) by hostname
  *	@author:	xbw
