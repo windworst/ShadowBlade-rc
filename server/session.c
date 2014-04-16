@@ -6,10 +6,12 @@
 
 extern COMMAND_HANDLER_FUNC(newconnect);
 extern COMMAND_HANDLER_FUNC(ioredirect);
+extern COMMAND_HANDLER_FUNC(reconnect);
 
 command_proc command_proc_list[]=
 {
 	{"newconnect",COMMAND_HANDLER(newconnect)},
+	{"reconnect",COMMAND_HANDLER(reconnect)},
 	{"ioredirect",COMMAND_HANDLER(ioredirect)},
 };
 

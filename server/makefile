@@ -2,8 +2,8 @@ CC=gcc
 CFLAGS=-Os -s
 LFLAGS=-Os -s -mwindows -fmerge-all-constants
 
-server.exe:socket_ctrl.o socket_func.o session.o server_main.o iodirect.o newconnect.o config.o
-	$(CC) $(LFLAGS) socket_ctrl.o socket_func.o session.o server_main.o iodirect.o newconnect.o config.o -o server.exe
+server.exe:socket_ctrl.o socket_func.o session.o server_main.o iodirect.o newconnect.o config.o reconnect.o
+	$(CC) $(LFLAGS) socket_ctrl.o socket_func.o session.o server_main.o iodirect.o newconnect.o config.o reconnect.o -o server.exe
 
 socket_ctrl.o:socket_ctrl.c
 	$(CC) $(CFLAGS) -c socket_ctrl.c
@@ -25,6 +25,9 @@ iodirect.o:command/iodirect_windows.c
 
 newconnect.o:command/newconnect.c
 	$(CC) $(CFLAGS) -c command/newconnect.c -o newconnect.o
+
+reconnect.o:command/reconnect.c
+	$(CC) $(CFLAGS) -c command/reconnect.c -o reconnect.o
 
 clean:
 	rm *.o

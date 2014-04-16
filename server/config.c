@@ -3,7 +3,7 @@
 raw_config g_raw_config=
 {
 	CONFIG_FLAG,
-	"127.0.0.1",
+	"127.0.0.1:5555",
 	"ShadowBlade",
 	"firstblood",
 	"10",
