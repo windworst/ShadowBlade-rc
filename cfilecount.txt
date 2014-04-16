@@ -1,0 +1,15 @@
+operation.h line: 9,size: 86
+server/config.c line: 28,size: 505
+server/config.h line: 34,size: 658
+server/server_main.c line: 37,size: 637
+server/session.c line: 66,size: 1292
+server/session.h line: 31,size: 653
+server/socket_ctrl.c line: 218,size: 4563
+server/socket_ctrl.h line: 14,size: 454
+server/socket_func.c line: 124,size: 2340
+server/socket_func.h line: 72,size: 2365
+server/thread_func.h line: 9,size: 294
+server/command/iodirect.h line: 9,size: 131
+server/command/iodirect_windows.c line: 172,size: 4596
+server/command/newconnect.c line: 41,size: 877
+Total:  line:864,size:19451
