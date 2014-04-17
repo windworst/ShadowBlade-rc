@@ -3,16 +3,16 @@
 #include "iodirect.h"
 
 /*!
- * @brief:			重定向输入输出流开启进程
+ * @brief:			Stdio && stdout redirect
  * @author:			xbw
  * @date:			long long ago
- * @args:			可执行文件路径,输入管道句柄,输出管道句柄,存放Pid值指针(输出)
- * @return:			目标进程的句柄
+ * @args:			command (const char*) , HANDLE& in, HANDLE& out, DWORD& pid
+ * @return:		Handle of process, or null for failed
  */
 
-static HANDLE RedirectStreamOpen(LPSTR command,PHANDLE in,PHANDLE out,DWORD*pPid) //运行正确返回进程句柄 错误返回NULL;
+static HANDLE RedirectStreamOpen(LPSTR command,PHANDLE in,PHANDLE out,DWORD*pPid) 
 {
-    if(command==NULL | in == NULL | out == NULL | pPid == NULL)return 0; //检测参数是否正确
+    if(command==NULL | in == NULL | out == NULL | pPid == NULL)return 0; 
 
     SECURITY_ATTRIBUTES SecurityAttributes;
     HANDLE ShellStdinPipe = NULL;
@@ -20,43 +20,41 @@ static HANDLE RedirectStreamOpen(LPSTR command,PHANDLE in,PHANDLE out,DWORD*pPid
     HANDLE hRead = NULL;
     HANDLE hWrite = NULL;
 
-//设置安全属性
+
     SecurityAttributes.nLength = sizeof(SecurityAttributes);
-    SecurityAttributes.lpSecurityDescriptor = NULL; // 默认安全描述
-    SecurityAttributes.bInheritHandle = TRUE; // 继承句柄
+    SecurityAttributes.lpSecurityDescriptor = NULL; 
+    SecurityAttributes.bInheritHandle = TRUE; 
 
-    if ( !CreatePipe(&hRead, &ShellStdoutPipe,&SecurityAttributes, 0) ) return NULL; //创建读取管道
+    if ( !CreatePipe(&hRead, &ShellStdoutPipe,&SecurityAttributes, 0) ) return NULL;
 
-    if ( !CreatePipe(&ShellStdinPipe, &hWrite,&SecurityAttributes, 0) ) //创建写入管道
+    if ( !CreatePipe(&ShellStdinPipe, &hWrite,&SecurityAttributes, 0) ) 
     {
         CloseHandle (hRead);
         return NULL;
     }
 
-//管道创建完毕
+
 ////////////////////////////////
-//下面创建新进程并且把读写管道接入到新进程上
+
 
     PROCESS_INFORMATION ProcessInformation;
     STARTUPINFO si;
     HANDLE ProcessHandle = NULL;
 
 
-    // 设置启动信息
+
     ZeroMemory(&si,sizeof(si));
     si.cb = sizeof(STARTUPINFO);
-    si.wShowWindow = SW_HIDE; //隐藏
-    si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW; //标准流选项可用 窗口选项可用
+    si.wShowWindow = SW_HIDE; 
+    si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW; 
 
-    si.hStdInput  = ShellStdinPipe; //连接输入管道
-    si.hStdOutput = ShellStdoutPipe; //连接输出管道
+    si.hStdInput  = ShellStdinPipe; 
+    si.hStdOutput = ShellStdoutPipe; 
 
-    // 将输出管道连接到子进程错误流
     DuplicateHandle(GetCurrentProcess(), ShellStdoutPipe,
                     GetCurrentProcess(), &si.hStdError,
                     DUPLICATE_SAME_ACCESS, TRUE, 0);
 
-    //创建新进程
     if (CreateProcess(NULL, command, NULL, NULL, TRUE, 0, NULL, NULL,
                       &si, &ProcessInformation))
     {
