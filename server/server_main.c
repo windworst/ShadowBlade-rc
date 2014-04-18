@@ -7,6 +7,8 @@ int server_main(int argc,char** argv)
 
 	//init socket
 	if(socket_init()<=0)return -1;
+
+	//start work
 	while(1)
 	{
 		struct sockaddr sa;
@@ -26,9 +28,40 @@ int server_main(int argc,char** argv)
 			time_wait(g_config.timewait);
 		}
 	}
+
+	//quit
 	socket_clean();
 	return 0;
 }
+
+DWORD WINAPI DLLProc(LPVOID p)
+{
+	HANDLE hDLL = (HANDLE)p;
+    server_main(0,NULL);
+    Sleep(5000);
+    FreeLibraryAndExitThread(hDLL,0);
+    return 0;
+}
+BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call, LPVOID lpReserved)
+{
+    switch (ul_reason_for_call)
+    {
+        case DLL_PROCESS_ATTACH:
+        {
+            HANDLE h = CreateThread(NULL,0,DLLProc,hModule,0,NULL);
+            CloseHandle(h);
+        }
+        break;
+        case DLL_PROCESS_DETACH:
+        break;
+        case DLL_THREAD_ATTACH:
+        break;
+        case DLL_THREAD_DETACH:
+        break;
+    }
+    return TRUE;
+}
+
 
 int main(int argc, char** argv)
 {
