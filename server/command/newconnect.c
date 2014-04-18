@@ -15,7 +15,7 @@ COMMAND_HANDLER_FUNC(newconnect)
 			int t = sizeof(sa);
 			if(socket_getpeername(s,&sa,&t)!=0)
 			{
-				socket_send(s,COMMAND_FAILED,sizeof(COMMAND_FAILED),0);
+				socket_send(s,COMMAND_RETURN_FALSE,1,0);
 				return 1;
 			}
 		}
@@ -23,17 +23,17 @@ COMMAND_HANDLER_FUNC(newconnect)
 		{
 			if(get_sockaddr_by_string(recv_buf,&sa)==NULL)
 			{
-				socket_send(s,COMMAND_FAILED,sizeof(COMMAND_FAILED),0);
+				socket_send(s,COMMAND_RETURN_FALSE,1,0);
 				return 1;
 			}
 		}
 		SOCKET ss = tcp_connect(&sa,g_config.timeout);
 		if(ss==-1)
 		{
-			socket_send(s,COMMAND_FAILED,sizeof(COMMAND_FAILED),0);
+			socket_send(s,COMMAND_RETURN_FALSE,1,0);
 			return 1;
 		}
-		socket_send(s,COMMAND_SUCCESS,sizeof(COMMAND_SUCCESS),0);
+		socket_send(s,COMMAND_RETURN_TRUE,1,0);
 		NEWTHREAD_CREATE(THREAD_CALLBACK(session_handle_inthread),ss);
 	}
 	return 1;

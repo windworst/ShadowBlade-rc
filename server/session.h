@@ -3,13 +3,8 @@
 #include "socket_ctrl.h"
 #include "thread_func.h"
 
-#define COMMAND_ACCEPT	"accept"
-#define COMMAND_REJECT	"reject"
-
-#define COMMAND_SUCCESS "success"
-#define COMMAND_FAILED  "failed"
-#define COMMAND_ERROR	"error"
-#define COMMAND_QUIT	"quit"
+#define COMMAND_RETURN_TRUE		"#"
+#define COMMAND_RETURN_FALSE	"!"
 
 //Command Handle
 typedef int (*command_handler)(SOCKET s);

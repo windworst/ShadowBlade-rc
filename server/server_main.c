@@ -25,7 +25,7 @@ int server_main(int argc,char** argv)
 		}
 		else
 		{
-			time_wait(g_config.timewait);
+			time_wait(g_config.timewait*1000);
 		}
 	}
 

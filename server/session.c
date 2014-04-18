@@ -44,10 +44,10 @@ int session_handle(SOCKET s)
 		if(hldr==NULL)
 		{
 			//undefined command
-			socket_send(s,COMMAND_REJECT,sizeof(COMMAND_REJECT),0);
+			socket_send(s,COMMAND_RETURN_FALSE,1,0);
 			continue;
 		}
-		socket_send(s,COMMAND_ACCEPT,sizeof(COMMAND_ACCEPT),0);
+		socket_send(s,COMMAND_RETURN_TRUE,1,0);
 		if(!hldr(s))
 		{
 			//command_handler cut down session
