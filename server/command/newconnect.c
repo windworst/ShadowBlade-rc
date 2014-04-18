@@ -3,6 +3,8 @@
 
 #define NEWCONNECT_BUFLEN 256
 
+#include <string.h>
+
 COMMAND_HANDLER_FUNC(newconnect)
 {
 	char recv_buf[NEWCONNECT_BUFLEN+1]={0};
@@ -32,6 +34,16 @@ COMMAND_HANDLER_FUNC(newconnect)
 		{
 			socket_send(s,COMMAND_RETURN_FALSE,1,0);
 			return 1;
+		}
+		char *carry_str = strstr(recv_buf,"@");
+		if(carry_str!=NULL)
+		{
+			++carry_str;
+			int len = strlen(carry_str);
+			if(len>0)
+			{
+				socket_send(ss,carry_str,len,0);
+			}
 		}
 		socket_send(s,COMMAND_RETURN_TRUE,1,0);
 		NEWTHREAD_CREATE(THREAD_CALLBACK(session_handle_inthread),ss);
