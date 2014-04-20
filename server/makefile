@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Os -s
-LFLAGS=-Os -s -mwindows -fmerge-all-constants
+LFLAGS=-Os -s -fmerge-all-constants  -mwindows
 
 OBJS = socket_ctrl.o\
 	   socket_func.o\

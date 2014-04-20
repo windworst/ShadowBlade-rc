@@ -210,10 +210,17 @@ SOCKET tcp_listen(long port)
 {
 	SOCKET s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(s==-1)return -1;
+
+	long ip_value = socket_htonl(INADDR_ANY);
+	char   name[128]; 
+	if(socket_gethostname(name,   128)==0)
+	{ 
+		ip_value = gethost(name);
+	}
 	struct sockaddr_in sa_in;
 	sa_in.sin_family = AF_INET;
 	sa_in.sin_port = socket_htons(port);
-	sa_in.sin_addr.s_addr = socket_htonl(INADDR_ANY);
+	sa_in.sin_addr.s_addr = ip_value;
 
 	int opt=1;
 	if( socket_setsockopt(s,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt)!=0) //reuseaddr

@@ -34,6 +34,7 @@ static export_func s_socket_func_list[] =
 	{"__WSAFDIsSet",	(void*)&d_WSAFDIsSet},
 	{"select",			(void*)&d_select},
 	{"gethostbyname",	(void*)&d_gethostbyname},
+	{"gethostname",	(void*)&d_gethostname},
 	{"ioctlsocket",		(void*)&d_ioctlsocket},
 };
 

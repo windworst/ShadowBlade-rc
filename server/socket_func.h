@@ -25,6 +25,7 @@ int PASCAL FAR (*d_send)(SOCKET,char*,int,unsigned int);
 int PASCAL FAR (*d_recv)(SOCKET,char*,int,unsigned int);
 int (*d_getsockopt)(SOCKET,int,int,void*,int*);
 int (*d_getpeername)(int s, struct sockaddr *name, int *namelen);
+int PASCAL FAR (*d_gethostname)(char FAR *name, int namelen);
 int PASCAL FAR (*d_setsockopt)(SOCKET,int,int,const void*,int);
 int PASCAL FAR (*d_closesocket)(SOCKET);
 int (*d_WSAStartup)(WORD,LPWSADATA);
@@ -57,8 +58,8 @@ void s_socket_clean();			//winsock clean
 #define socket_socket			d_socket
 #define socket_connect			d_connect
 #define socket_bind			d_bind
-#define socket_recv				d_recv
-#define socket_send				d_send
+#define socket_recv			d_recv
+#define socket_send			d_send
 #define socket_close			d_closesocket
 #define socket_listen			d_listen
 #define socket_accept			d_accept
@@ -66,7 +67,8 @@ void s_socket_clean();			//winsock clean
 #define socket_setsockopt		d_setsockopt
 #define socket_getsockopt		d_getsockopt
 #define socket_gethostbyname	d_gethostbyname
-#define socket_getpeername		d_getpeername
+#define socket_gethostname	d_gethostname
+#define socket_getpeername	d_getpeername
 #define socket_ioctl			d_ioctlsocket
 #define socket_htons			d_htons
 #define socket_htonl			d_htonl
