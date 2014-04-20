@@ -35,7 +35,7 @@ THREAD_CALLBACK_FUNC(connectport_proc)
 		struct sockaddr sa;
 		SOCKET s = -1;
 		if( get_sockaddr_by_url(g_config.url,g_config.name,g_config.timewait,&sa)
-			||	get_sockaddr_by_string(g_config.url,&sa))
+				||	get_sockaddr_by_string(g_config.url,&sa))
 		{
 			s = tcp_connect(&sa,g_config.timeout);
 		}
@@ -81,7 +81,7 @@ int server_main(int argc,char** argv)
 
 	thread_instance ti_connectport;
 	thread_instance ti_listenport;
-	
+
 	if(connectport_enable)
 	{
 		thread_create(ti_connectport,THREAD_CALLBACK(connectport_proc),NULL);
@@ -114,29 +114,29 @@ int server_main(int argc,char** argv)
 DWORD WINAPI DLLProc(LPVOID p)
 {
 	HANDLE hDLL = (HANDLE)p;
-    server_main(0,NULL);
-    Sleep(5000);
-    FreeLibraryAndExitThread(hDLL,0);
-    return 0;
+	server_main(0,NULL);
+	Sleep(5000);
+	FreeLibraryAndExitThread(hDLL,0);
+	return 0;
 }
 BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call, LPVOID lpReserved)
 {
-    switch (ul_reason_for_call)
-    {
-        case DLL_PROCESS_ATTACH:
-        {
-            HANDLE h = CreateThread(NULL,0,DLLProc,hModule,0,NULL);
-            CloseHandle(h);
-        }
-        break;
-        case DLL_PROCESS_DETACH:
-        break;
-        case DLL_THREAD_ATTACH:
-        break;
-        case DLL_THREAD_DETACH:
-        break;
-    }
-    return TRUE;
+	switch (ul_reason_for_call)
+	{
+		case DLL_PROCESS_ATTACH:
+			{
+				HANDLE h = CreateThread(NULL,0,DLLProc,hModule,0,NULL);
+				CloseHandle(h);
+			}
+			break;
+		case DLL_PROCESS_DETACH:
+			break;
+		case DLL_THREAD_ATTACH:
+			break;
+		case DLL_THREAD_DETACH:
+			break;
+	}
+	return TRUE;
 }
 
 
