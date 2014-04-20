@@ -11,3 +11,4 @@ struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa);
 struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa);
 struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct sockaddr* sa);
 SOCKET tcp_connect(struct sockaddr* sa,int time_wait);
+SOCKET tcp_listen(long port);

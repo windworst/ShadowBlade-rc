@@ -4,10 +4,12 @@ LFLAGS=-Os -s -mwindows -fmerge-all-constants
 
 OBJS = socket_ctrl.o\
 	   socket_func.o\
+	   thread_func.o\
 	   session.o\
 	   server_main.o\
 	   iodirect.o\
 	   newconnect.o\
+	   control.o\
 	   config.o\
 	   reconnect.o
 
@@ -37,6 +39,9 @@ newconnect.o:command/newconnect.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 reconnect.o:command/reconnect.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+control.o:command/control.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 ##

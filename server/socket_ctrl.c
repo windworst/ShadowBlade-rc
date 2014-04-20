@@ -197,6 +197,37 @@ SOCKET tcp_connect(struct sockaddr* sa,int time_wait)
 	return s;
 }
 
+
+/*!
+ * @brief:		get listen sockfd by port.
+ * @author:		xbw
+ * @date:		2014_4_20
+ * @args:		port
+ * @return:	listen sockfd, or -1 failed
+ */
+
+SOCKET tcp_listen(long port)
+{
+	SOCKET s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+	if(s==-1)return -1;
+	struct sockaddr_in sa_in;
+	sa_in.sin_family = AF_INET;
+	sa_in.sin_port = socket_htons(port);
+	sa_in.sin_addr.s_addr = socket_htonl(INADDR_ANY);
+
+	int opt=1;
+	if( socket_setsockopt(s,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt)!=0) //reuseaddr
+	||socket_bind(s,(struct sockaddr*)&sa_in,sizeof(sa_in))!=0 
+	|| socket_listen(s,5)!=0)
+	{
+		socket_close(s);
+		s = -1;
+	}
+
+	return s;
+}
+
+
 #ifdef SOCK_CTRL_MAIN
 #include <stdio.h>
 

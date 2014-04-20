@@ -35,7 +35,7 @@ COMMAND_HANDLER_FUNC(reconnect)
 		}
 		socket_send(s,COMMAND_RETURN_TRUE,1,0);
 		socket_close(s);
-		return session_handle(ss);
+		return session_handle(ss,command_proc_list);
 	}
 	return 1;
 }
