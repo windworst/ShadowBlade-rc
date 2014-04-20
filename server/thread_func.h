@@ -15,8 +15,8 @@ void thread_close(thread_instance *t);
 int thread_join(thread_instance *t);
 */
 
-#define thread_create(t,func,arg) t=CreateThread(NULL,0,func,arg,0,NULL)
+#define thread_create(t,func,arg) (t)=CreateThread(NULL,0,(func),(arg),0,NULL)
 #define thread_close(t) CloseHandle(t)
-#define thread_join(t) WaitForSingleObject(t,INFINITE);
+#define thread_join(t) WaitForSingleObject((t),INFINITE);
 
 #define time_wait(x) Sleep(x)
