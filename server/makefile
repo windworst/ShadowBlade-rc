@@ -4,7 +4,6 @@ LFLAGS=-Os -s -fmerge-all-constants # -mwindows
 
 OBJS = socket_ctrl.o\
 	   socket_func.o\
-	   thread_func.o\
 	   session.o\
 	   server_main.o\
 	   iodirect.o\

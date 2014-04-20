@@ -15,8 +15,8 @@ THREAD_CALLBACK_FUNC(listenport_proc)
 				if(session_verify(ac,g_config.name,g_config.passwd))
 				{
 					thread_instance t;
-					thread_create(&t,THREAD_CALLBACK(session_handle_inthread),(void*)ac);
-					thread_close(&t);
+					thread_create(t,THREAD_CALLBACK(session_handle_inthread),(void*)ac);
+					thread_close(t);
 				}
 			}
 		}
@@ -84,24 +84,24 @@ int server_main(int argc,char** argv)
 	
 	if(connectport_enable)
 	{
-		thread_create(&ti_connectport,THREAD_CALLBACK(connectport_proc),NULL);
+		thread_create(ti_connectport,THREAD_CALLBACK(connectport_proc),NULL);
 	}
 
 	if(listenport_enable)
 	{
-		thread_create(&ti_listenport,THREAD_CALLBACK(listenport_proc),NULL);
+		thread_create(ti_listenport,THREAD_CALLBACK(listenport_proc),NULL);
 	}
 
 	if(connectport_enable)
 	{
-		thread_join(&ti_connectport);
-		thread_close(&ti_connectport);
+		thread_join(ti_connectport);
+		thread_close(ti_connectport);
 	}
 
 	if(listenport_enable)
 	{
-		thread_join(&ti_listenport);
-		thread_close(&ti_listenport);
+		thread_join(ti_listenport);
+		thread_close(ti_listenport);
 	}
 
 	//quit

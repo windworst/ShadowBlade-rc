@@ -67,8 +67,8 @@ COMMAND_HANDLER_FUNC(newconnect)
 		}
 		socket_send(s,COMMAND_RETURN_TRUE,1,0);
 		thread_instance t;
-		thread_create(&t,THREAD_CALLBACK(session_handle_inthread),(void*)ss);
-		thread_close(&t);
+		thread_create(t,THREAD_CALLBACK(session_handle_inthread),(void*)ss);
+		thread_close(t);
 	}
 	return 1;
 }
