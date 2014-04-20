@@ -4,7 +4,7 @@ raw_config g_raw_config=
 {
 	CONFIG_FLAG,
 	"127.0.0.1:5555",
-	"5556",
+	"0",
 	"ShadowBlade",
 	"firstblood",
 	"10",
@@ -23,6 +23,9 @@ void read_config(raw_config* raw,config* conf)
 	conf->url = raw->url;
 	conf->name = raw->name;
 	conf->passwd = raw->passwd;
+	conf->timewait = 0;
+	conf->timeout = 0;
+	conf->listenport = 0;
 	sscanf(raw->timewait,"%d",&conf->timewait);
 	sscanf(raw->timeout,"%d",&conf->timeout);
 	sscanf(raw->listenport,"%d",&conf->listenport);
