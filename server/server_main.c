@@ -12,9 +12,12 @@ THREAD_CALLBACK_FUNC(listenport_proc)
 			SOCKET ac;
 			while(ac = socket_accept(s,NULL,NULL),ac!=-1)
 			{
-				thread_instance t;
-				thread_create(&t,THREAD_CALLBACK(session_handle_inthread),(void*)ac);
-				thread_close(&t);
+				if(session_verify(ac,g_config.name,g_config.passwd))
+				{
+					thread_instance t;
+					thread_create(&t,THREAD_CALLBACK(session_handle_inthread),(void*)ac);
+					thread_close(&t);
+				}
 			}
 		}
 		else
@@ -38,7 +41,10 @@ THREAD_CALLBACK_FUNC(connectport_proc)
 		}
 		if(s!=-1)
 		{
-			session_handle(s,command_proc_list);
+			if(session_verify(s,g_config.name,g_config.passwd))
+			{
+				session_handle(s,command_proc_list);
+			}
 			socket_close(s);
 		}
 		else

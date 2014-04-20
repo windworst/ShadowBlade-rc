@@ -62,6 +62,14 @@ int session_handle(SOCKET s,command_proc* proc_list)
 	return 0;
 }
 
+
+//verify session before session_handle, now is null-function
+int session_verify(SOCKET s,const char* name, const char* pass)
+{
+	return 1;
+}
+
+
 THREAD_CALLBACK_FUNC(session_handle_inthread)
 {
 	SOCKET s = (SOCKET)arg;

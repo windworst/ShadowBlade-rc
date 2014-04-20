@@ -24,5 +24,7 @@ command_handler get_command_handler(command_proc* proc_list,const char* command)
 
 //Session Handle
 int session_handle(SOCKET s,command_proc* proc_list);
+int session_verify(SOCKET s,const char* name, const char* pass);
+
 THREAD_CALLBACK_FUNC(session_handle_inthread);
 

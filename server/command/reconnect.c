@@ -33,6 +33,15 @@ COMMAND_HANDLER_FUNC(reconnect)
 			socket_send(s,COMMAND_RETURN_FALSE,1,0);
 			return 1;
 		}
+		
+		//verify session
+		if(!session_verify(ss,g_config.name,g_config.passwd))
+		{
+			socket_close(ss);
+			socket_send(s,COMMAND_RETURN_FALSE,1,0);
+			return 1;
+		}
+
 		socket_send(s,COMMAND_RETURN_TRUE,1,0);
 		socket_close(s);
 		return session_handle(ss,command_proc_list);
