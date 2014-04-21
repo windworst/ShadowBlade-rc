@@ -2,7 +2,7 @@
 #include "config.h"
 #include <string.h>
 
-#define COMMAND_LENGTH 256
+#define COMMAND_LENGTH 512
 
 extern COMMAND_HANDLER_FUNC(newconnect);
 extern COMMAND_HANDLER_FUNC(ioredirect);

