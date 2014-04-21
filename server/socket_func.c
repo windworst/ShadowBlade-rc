@@ -63,13 +63,13 @@ void s_func_clean()
  */
 int s_func_init()
 {
-	socket_func_clean();
+    int i;
+    int s = sizeof(s_socket_func_list)/sizeof(*s_socket_func_list);
 
+	socket_func_clean();
 	s_ws2_32_dll = LoadLibrary("ws2_32.dll");
 	if(s_ws2_32_dll==NULL)return -1;
 
-	int i;
-	int s = sizeof(s_socket_func_list)/sizeof(*s_socket_func_list);
 	for(i=0;i<s;++i)
 	{
 		void* h_proc = GetProcAddress(s_ws2_32_dll,s_socket_func_list[i].func_name);

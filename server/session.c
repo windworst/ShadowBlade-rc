@@ -38,13 +38,14 @@ int session_handle(SOCKET s,command_proc* proc_list)
 	set_keepalive(s,g_config.timeout);
 	while(1)
 	{
+	    command_handler hldr = NULL;
 		char command[COMMAND_LENGTH+1]={0};
 		if(socket_recv(s,command,COMMAND_LENGTH,0)<=0)
 		{
 			break;
 		}
 		//Get command handler
-		command_handler hldr = get_command_handler(proc_list,command);
+		hldr = get_command_handler(proc_list,command);
 		if(hldr==NULL)
 		{
 			//undefined command

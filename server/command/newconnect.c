@@ -9,7 +9,6 @@ COMMAND_HANDLER_FUNC(newconnect)
 {
 	char recv_buf[NEWCONNECT_BUFLEN+1]={0};
 	int nread = socket_recv(s,recv_buf,NEWCONNECT_BUFLEN,0);
-	int i;
 	if(nread>0)
 	{
 		/*  recv string like:
@@ -22,13 +21,14 @@ COMMAND_HANDLER_FUNC(newconnect)
 		char *host_str = recv_buf;
 		char *carry_str = strstr(recv_buf,"@");
 		int carry_len = 0;
+		SOCKET ss = -1;
+        struct sockaddr sa;
 		if(carry_str!=NULL)
 		{
 			host_str = carry_str + 1;
 			carry_len = carry_str - recv_buf;
 		}
 
-		struct sockaddr sa;
 		if(host_str[0]=='.') //Connect myself
 		{
 			int t = sizeof(sa);
@@ -46,7 +46,7 @@ COMMAND_HANDLER_FUNC(newconnect)
 				return 1;
 			}
 		};
-		SOCKET ss = tcp_connect(&sa,g_config.timeout);
+		ss = tcp_connect(&sa,g_config.timeout);
 		if(ss==-1)
 		{
 			socket_send(s,COMMAND_RETURN_FALSE,1,0);
@@ -66,9 +66,11 @@ COMMAND_HANDLER_FUNC(newconnect)
 			socket_send(ss,recv_buf,carry_len,0);
 		}
 		socket_send(s,COMMAND_RETURN_TRUE,1,0);
-		thread_instance t;
-		thread_create(t,THREAD_CALLBACK(session_handle_inthread),(void*)ss);
-		thread_close(t);
+		{
+            thread_instance t;
+            thread_create(t,THREAD_CALLBACK(session_handle_inthread),(void*)ss);
+            thread_close(t);
+		}
 	}
 	return 1;
 }

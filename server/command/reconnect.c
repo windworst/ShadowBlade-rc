@@ -9,6 +9,7 @@ COMMAND_HANDLER_FUNC(reconnect)
 	int nread = socket_recv(s,recv_buf,RECONNECT_BUFLEN,0);
 	if(nread>0)
 	{
+	    SOCKET ss = -1;
 		struct sockaddr sa;
 		if(recv_buf[0]=='.') //Connect myself
 		{
@@ -27,13 +28,13 @@ COMMAND_HANDLER_FUNC(reconnect)
 				return 1;
 			}
 		}
-		SOCKET ss = tcp_connect(&sa,g_config.timeout);
+		ss = tcp_connect(&sa,g_config.timeout);
 		if(ss==-1)
 		{
 			socket_send(s,COMMAND_RETURN_FALSE,1,0);
 			return 1;
 		}
-		
+
 		//verify session
 		if(!session_verify(ss,g_config.name,g_config.passwd))
 		{

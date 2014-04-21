@@ -58,6 +58,11 @@ THREAD_CALLBACK_FUNC(connectport_proc)
 
 int server_main(int argc,char** argv)
 {
+    int connectport_enable = 0;
+	int listenport_enable = 0;
+
+    thread_instance ti_connectport;
+	thread_instance ti_listenport;
 	//Read config from raw_config
 	read_config(&g_raw_config,&g_config);
 
@@ -65,9 +70,6 @@ int server_main(int argc,char** argv)
 	if(socket_init()<=0)return -1;
 
 	//start work
-
-	int connectport_enable = 0;
-	int listenport_enable = 0;
 
 	if(g_config.url[0]!='\0')
 	{
@@ -78,9 +80,6 @@ int server_main(int argc,char** argv)
 	{
 		listenport_enable = 1;
 	}
-
-	thread_instance ti_connectport;
-	thread_instance ti_listenport;
 
 	if(connectport_enable)
 	{

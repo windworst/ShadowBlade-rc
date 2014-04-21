@@ -14,17 +14,17 @@ void set_keepalive(SOCKET s,int timeout)
  */
 long gethost(const char* name)
 {
-    long i = -1;
-    if(name)
-    {
-        struct hostent *host = socket_gethostbyname(name);
-        if(host&&host->h_addr)
-        {
-            i = *(long *)(host->h_addr);
-            return i;
-        }
-    }
-    return i;
+	long i = -1;
+	if(name)
+	{
+		struct hostent *host = socket_gethostbyname(name);
+		if(host&&host->h_addr)
+		{
+			i = *(long *)(host->h_addr);
+			return i;
+		}
+	}
+	return i;
 }
 
 /*!
@@ -54,18 +54,21 @@ struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa)
 struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
 {
 	char* port_str = strstr(str,":");
+	int port=0;
+	struct sockaddr* result = NULL;
+
 	if(port_str==NULL)
 	{
 		return NULL;
 	}
 	*port_str = '\0';
-	int port;
+
 	if(sscanf(port_str+1,"%d",&port)!=1 || (port<0||port>=65536))
 	{
 		*port_str = ':';
 		return NULL;
 	}
-	struct sockaddr* result = make_sockaddr(str,port,sa);
+	result = make_sockaddr(str,port,sa);
 	*port_str = ':';
 	return result;
 }
@@ -83,15 +86,21 @@ struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
 struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct sockaddr* sa)
 {
 	//Connect HTTP server
+	SOCKET s = -1;
 	int port = 80;
+	char url_buf[URL_LEN] = {0};
+
+	char * host = NULL;
+	char * port_str = NULL;
+	char * file_str = NULL;
+
 	if(strncmp(url,HTTP_HEAD,sizeof(HTTP_HEAD)-1)!=0)return NULL;
 
-	char url_buf[URL_LEN] = {0};
 	memcpy(url_buf,url,URL_LEN);
 
-	char * host = url_buf + sizeof(HTTP_HEAD)-1;
-	char * port_str = strstr(host,":");
-	char * file_str = strstr(host,"/");
+	host = url_buf + sizeof(HTTP_HEAD)-1;
+	port_str = strstr(host,":");
+	file_str = strstr(host,"/");
 
 	if(port_str)port_str[0] = '\0';
 	if(file_str)file_str[0] = '\0';
@@ -106,54 +115,61 @@ struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct so
 	}
 
 	//Send HTTP-get
-	char sndstr[URL_LEN*2 + 30]={0};
-	sprintf(sndstr,"GET /%s HTTP/1.1\nHost: %s:%d\n\n\n\n",file_str!=NULL?file_str+1:" ",host,port);
-	SOCKET s = tcp_connect(make_sockaddr(host,port,sa),timewait);
-	if(s==-1)return NULL;
-	socket_send(s,sndstr,strlen(sndstr)+1,0);
+	{
+		char sndstr[URL_LEN*2 + 30]={0};
+		s = tcp_connect(make_sockaddr(host,port,sa),timewait);
+		sprintf(sndstr,"GET /%s HTTP/1.1\nHost: %s:%d\n\n\n\n",file_str!=NULL?file_str+1:" ",host,port);
+		if(s==-1)return NULL;
+		socket_send(s,sndstr,strlen(sndstr)+1,0);
+	}
 
 	//Read page Data
-	char recv_buf[RECV_BUFLEN+1]={0};
-	int namelen = strlen(name);
-	int length;
-	while(length = socket_recv(s,recv_buf,RECV_BUFLEN,0),length>0)
 	{
-		recv_buf[length]='\0';
-
-		//get string start & end;
-		char *addr,*end;
-		if(
-				(addr = strstr(recv_buf,name),addr==NULL)
-				|| addr[namelen] != '('
-				||(end = strstr(addr,")"),end==NULL)
-		  )
-			continue;
-
-		//if find
-		addr += namelen+1;
-
-		//find port value
-		char *c = addr;
-		while(c<end)
+		char recv_buf[RECV_BUFLEN+1]={0};
+		int namelen = strlen(name);
+		int length;
+		while(length = socket_recv(s,recv_buf,RECV_BUFLEN,0),length>0)
 		{
-			if(*c==':')break;
-			++c;
-		}
-		*end = '\0';
-		*c = '\0';
-		if(
-				c<end
-				&& (port = atoi(c+1),(port<=0 || port>=65536))
-		  )
-		{
-			continue;
-		}
+			char *addr,*end;
+			recv_buf[length]='\0';
+			//get string start & end;
+			if(
+					(addr = strstr(recv_buf,name),addr==NULL)
+					|| addr[namelen] != '('
+					||(end = strstr(addr,")"),end==NULL)
+			  )
+				continue;
 
-		//Get it
-		struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;
-		sa_in->sin_addr.s_addr = gethost(addr);
-		sa_in->sin_port = socket_htons(port);
-		return sa;
+			//if find
+			addr += namelen+1;
+
+			//find port value
+			{
+				char *c = addr;
+				while(c<end)
+				{
+					if(*c==':')break;
+					++c;
+				}
+				*end = '\0';
+				*c = '\0';
+				if(
+						c<end
+						&& (port = atoi(c+1),(port<=0 || port>=65536))
+				  )
+				{
+					continue;
+				}
+			}
+
+			//Get it
+			{
+				struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;
+				sa_in->sin_addr.s_addr = gethost(addr);
+				sa_in->sin_port = socket_htons(port);
+				return sa;
+			}
+		}
 	}
 	return NULL;
 }
@@ -168,21 +184,24 @@ struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct so
 SOCKET tcp_connect(struct sockaddr* sa,int time_wait)
 {
 	//setting connect sockaddr
+	SOCKET s = -1;
+	fd_set set;
+	unsigned long ok = 1;
+	struct timeval tv;
+
 	if(sa==NULL)return -1;
-	SOCKET s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+	s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(s==-1)return -1;
 
 	//setting NBlock
-	unsigned long ok = 1;
 	socket_ioctl(s,FIONBIO,&ok);
 	socket_connect(s,sa,sizeof(*sa));
 
 	//check connect socketfd usable
-	fd_set set;
+
 	FD_ZERO(&set);
 	FD_SET(s,&set);
 
-	struct timeval tv;
 	tv.tv_sec = time_wait;
 	tv.tv_usec = 0;
 	if(socket_select(0,NULL,&set,NULL,&tv)<=0)
@@ -208,24 +227,27 @@ SOCKET tcp_connect(struct sockaddr* sa,int time_wait)
 
 SOCKET tcp_listen(long port)
 {
+    char   name[128]={0};
+    long ip_value = socket_htonl(INADDR_ANY);
+    struct sockaddr_in sa_in;
+    int opt=1;
+
 	SOCKET s = socket_socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if(s==-1)return -1;
 
-	long ip_value = socket_htonl(INADDR_ANY);
-	char   name[128]; 
 	if(socket_gethostname(name,   128)==0)
-	{ 
+	{
 		ip_value = gethost(name);
 	}
-	struct sockaddr_in sa_in;
+
 	sa_in.sin_family = AF_INET;
 	sa_in.sin_port = socket_htons(port);
 	sa_in.sin_addr.s_addr = ip_value;
 
-	int opt=1;
+
 	if( socket_setsockopt(s,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt)!=0) //reuseaddr
-	||socket_bind(s,(struct sockaddr*)&sa_in,sizeof(sa_in))!=0 
-	|| socket_listen(s,5)!=0)
+			||socket_bind(s,(struct sockaddr*)&sa_in,sizeof(sa_in))!=0
+			|| socket_listen(s,5)!=0)
 	{
 		socket_close(s);
 		s = -1;
