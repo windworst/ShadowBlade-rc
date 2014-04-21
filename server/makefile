@@ -5,12 +5,13 @@ LFLAGS=-Os -s -fmerge-all-constants  -mwindows
 OBJS = socket_ctrl.o\
 	   socket_func.o\
 	   session.o\
+	   config.o\
 	   server_main.o\
 	   iodirect.o\
 	   newconnect.o\
 	   control.o\
-	   config.o\
-	   reconnect.o
+	   reconnect.o\
+	   aes256.o
 
 DLL_FILE = server.dll
 EXE_FILE = server.exe
@@ -44,6 +45,10 @@ control.o:command/control.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 ##
+
+#crypto module
+aes256.o:crypto/aes256.c
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
 	rm *.o *.exe *.dll
