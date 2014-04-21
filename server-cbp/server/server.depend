@@ -1,0 +1,70 @@
+# depslib dependency file v1.0
+1398048546 source:e:\project\shadowblade-rc\server\command\control.c
+	"../session.h"
+	<stdlib.h>
+
+1398048546 e:\project\shadowblade-rc\server\session.h
+	"socket_ctrl.h"
+	"thread_func.h"
+
+1398048546 e:\project\shadowblade-rc\server\socket_ctrl.h
+	"socket_func.h"
+
+1398061717 e:\project\shadowblade-rc\server\socket_func.h
+	<stdio.h>
+	<string.h>
+	<winsock.h>
+
+1398061724 e:\project\shadowblade-rc\server\thread_func.h
+	<windows.h>
+
+1398062567 source:e:\project\shadowblade-rc\server\command\iodirect_windows.c
+	<windows.h>
+	"iodirect.h"
+
+1397788966 e:\project\shadowblade-rc\server\command\iodirect.h
+	"../session.h"
+
+1398063379 source:e:\project\shadowblade-rc\server\command\newconnect.c
+	"../session.h"
+	"../config.h"
+	<string.h>
+
+1398048546 e:\project\shadowblade-rc\server\config.h
+
+1398062644 source:e:\project\shadowblade-rc\server\command\reconnect.c
+	"../session.h"
+	"../config.h"
+
+1398048546 source:e:\project\shadowblade-rc\server\config.c
+	"config.h"
+	<stdio.h>
+
+1398048004 source:e:\project\shadowblade-rc\server\crypto\aes256.c
+	"aes256.h"
+
+1398048035 e:\project\shadowblade-rc\server\crypto\aes256.h
+
+1398049147 source:e:\project\shadowblade-rc\server\crypto\md5.c
+	<memory.h>
+	"md5.h"
+
+1398049122 e:\project\shadowblade-rc\server\crypto\md5.h
+
+1398062671 source:e:\project\shadowblade-rc\server\server_main.c
+	"session.h"
+	"config.h"
+
+1398062687 source:e:\project\shadowblade-rc\server\session.c
+	"session.h"
+	"config.h"
+
+1398063240 source:e:\project\shadowblade-rc\server\socket_ctrl.c
+	"socket_ctrl.h"
+	<stdio.h>
+
+1398063284 source:e:\project\shadowblade-rc\server\socket_func.c
+	"socket_func.h"
+	<windows.h>
+	<stdio.h>
+
