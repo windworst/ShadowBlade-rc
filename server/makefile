@@ -11,7 +11,8 @@ OBJS = socket_ctrl.o\
 	   newconnect.o\
 	   control.o\
 	   reconnect.o\
-	   aes256.o
+	   aes256.o\
+	   md5.o
 
 DLL_FILE = server.dll
 EXE_FILE = server.exe
@@ -48,6 +49,9 @@ control.o:command/control.c
 
 #crypto module
 aes256.o:crypto/aes256.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+md5.o:crypto/md5.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
