@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <string.h>
 
@@ -8,9 +9,8 @@
  *	@author:	xbw
  *	@date:		2014_4_12
  */
-#pragma once
 
-#include <winsock2.h>
+#include <winsock.h>
 
 //dynamic socket function
 
