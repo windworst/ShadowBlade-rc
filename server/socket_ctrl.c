@@ -38,7 +38,7 @@ struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa)
 {
 	struct sockaddr_in* sa_in = (struct sockaddr_in*)sa;
 	sa_in->sin_family = AF_INET;
-	sa_in->sin_port = socket_htons(port);
+	sa_in->sin_port = socket_htons((unsigned short)port);
 	sa_in->sin_addr.s_addr = gethost(host);
 	if(sa_in->sin_addr.s_addr==-1)return NULL;
 	return sa;
@@ -51,11 +51,17 @@ struct sockaddr* make_sockaddr(const char* host,int port,struct sockaddr* sa)
  * @args:			string, sockaddr* sa
  * @return:			sockaddr *
  */
-struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
+#define SOCKADDR_STR_LEN 256
+struct sockaddr* get_sockaddr_by_string(const char* sockaddr_str,struct sockaddr* sa)
 {
-	char* port_str = strstr(str,":");
+    char str[SOCKADDR_STR_LEN] = {0};
+    int sockaddr_strlen = strlen(sockaddr_str);
+	char* port_str = NULL;
 	int port=0;
 	struct sockaddr* result = NULL;
+
+    memcpy(str,sockaddr_str,sockaddr_strlen>SOCKADDR_STR_LEN?SOCKADDR_STR_LEN:sockaddr_strlen);
+    port_str = strstr(str,":");
 
 	if(port_str==NULL)
 	{
@@ -83,12 +89,13 @@ struct sockaddr* get_sockaddr_by_string(char* str,struct sockaddr* sa)
 #define HTTP_HEAD "http://"
 #define URL_LEN 256
 #define RECV_BUFLEN 8192
-struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct sockaddr* sa)
+struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,struct sockaddr* sa)
 {
 	//Connect HTTP server
 	SOCKET s = -1;
 	int port = 80;
 	char url_buf[URL_LEN] = {0};
+	int url_len = strlen(url);
 
 	char * host = NULL;
 	char * port_str = NULL;
@@ -96,7 +103,7 @@ struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct so
 
 	if(strncmp(url,HTTP_HEAD,sizeof(HTTP_HEAD)-1)!=0)return NULL;
 
-	memcpy(url_buf,url,URL_LEN);
+	memcpy(url_buf,url,url_len>URL_LEN?URL_LEN:url_len);
 
 	host = url_buf + sizeof(HTTP_HEAD)-1;
 	port_str = strstr(host,":");
@@ -166,7 +173,7 @@ struct sockaddr* get_sockaddr_by_url(char* url,char* name,int timewait,struct so
 			{
 				struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;
 				sa_in->sin_addr.s_addr = gethost(addr);
-				sa_in->sin_port = socket_htons(port);
+				sa_in->sin_port = socket_htons((unsigned short)port);
 				return sa;
 			}
 		}
@@ -241,7 +248,7 @@ SOCKET tcp_listen(long port)
 	}
 
 	sa_in.sin_family = AF_INET;
-	sa_in.sin_port = socket_htons(port);
+	sa_in.sin_port = socket_htons((unsigned short)port);
 	sa_in.sin_addr.s_addr = ip_value;
 
 

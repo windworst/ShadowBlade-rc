@@ -43,7 +43,7 @@ THREAD_CALLBACK_FUNC(connectport_proc)
 		{
 			if(session_verify(s,g_config.name,g_config.passwd))
 			{
-				session_handle(s,command_proc_list);
+				session_handle(s);
 			}
 			socket_close(s);
 		}

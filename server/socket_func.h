@@ -21,7 +21,7 @@ int (PASCAL FAR *d_listen)(SOCKET,int);
 SOCKET (PASCAL FAR  *d_accept)(SOCKET,struct sockaddr*,int*);
 unsigned short (PASCAL FAR  *d_htons)(unsigned short);
 unsigned long (PASCAL FAR  *d_htonl)(unsigned long);
-int (PASCAL FAR *d_send)(SOCKET,char*,int,unsigned int);
+int (PASCAL FAR *d_send)(SOCKET,const char*,int,unsigned int);
 int (PASCAL FAR *d_recv)(SOCKET,char*,int,unsigned int);
 int (PASCAL FAR *d_getsockopt)(SOCKET,int,int,void*,int*);
 int (PASCAL FAR *d_getpeername)(int s, struct sockaddr *name, int *namelen);

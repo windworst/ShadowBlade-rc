@@ -5,7 +5,7 @@
 COMMAND_HANDLER_FUNC(killyourself)
 {
 	exit(0);
-	return 1;
+	return 0;
 }
 
 static command_proc control_command_proc_list[]=
@@ -17,7 +17,7 @@ static command_proc control_command_proc_list[]=
 
 COMMAND_HANDLER_FUNC(control)
 {
-	return session_handle(s,control_command_proc_list);
+	return command_switcher(s,control_command_proc_list,command);
 }
 
 
