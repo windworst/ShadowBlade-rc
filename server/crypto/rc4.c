@@ -21,7 +21,7 @@ void rc4_init(unsigned char *s, unsigned char *key, unsigned long key_len)
         s[j] = tmp;
     }
 }
- 
+
 /* 加解密 */
 void rc4_crypt(unsigned char *s, unsigned char *data, unsigned long data_len)
 {
@@ -52,7 +52,7 @@ int main()
     char pData[512] = "这是一个用来加密的数据Data";
     unsigned len = strlen(pData);
     int i;
-     
+
     printf("pData = %s\n", pData);
     printf("key = %s, length = %d\n\n", key, strlen(key));
     rc4_init(s, (unsigned char *)key, strlen(key)); //已经完成了初始化

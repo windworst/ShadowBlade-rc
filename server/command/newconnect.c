@@ -1,8 +1,6 @@
 #include "../session.h"
 #include "../config.h"
 
-#define NEWCONNECT_BUFLEN 256
-
 #include <string.h>
 SOCKET get_new_connect(SOCKET s,const char* command)
 {

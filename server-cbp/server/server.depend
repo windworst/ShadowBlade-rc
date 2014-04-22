@@ -1,13 +1,13 @@
 # depslib dependency file v1.0
-1398048546 source:e:\project\shadowblade-rc\server\command\control.c
+1398130774 source:e:\project\shadowblade-rc\server\command\control.c
 	"../session.h"
 	<stdlib.h>
 
-1398048546 e:\project\shadowblade-rc\server\session.h
+1398130774 e:\project\shadowblade-rc\server\session.h
 	"socket_ctrl.h"
 	"thread_func.h"
 
-1398048546 e:\project\shadowblade-rc\server\socket_ctrl.h
+1398130774 e:\project\shadowblade-rc\server\socket_ctrl.h
 	"socket_func.h"
 
 1398130774 e:\project\shadowblade-rc\server\socket_func.h
@@ -15,28 +15,28 @@
 	<string.h>
 	<winsock.h>
 
-1398061724 e:\project\shadowblade-rc\server\thread_func.h
+1398068729 e:\project\shadowblade-rc\server\thread_func.h
 	<windows.h>
 
-1398062567 source:e:\project\shadowblade-rc\server\command\iodirect_windows.c
+1398130774 source:e:\project\shadowblade-rc\server\command\iodirect_windows.c
 	<windows.h>
 	"iodirect.h"
 
-1397788966 e:\project\shadowblade-rc\server\command\iodirect.h
+1398134417 e:\project\shadowblade-rc\server\command\iodirect.h
 	"../session.h"
 
-1398063379 source:e:\project\shadowblade-rc\server\command\newconnect.c
+1398134389 source:e:\project\shadowblade-rc\server\command\newconnect.c
 	"../session.h"
 	"../config.h"
 	<string.h>
 
 1398048546 e:\project\shadowblade-rc\server\config.h
 
-1398062644 source:e:\project\shadowblade-rc\server\command\reconnect.c
+1398134384 source:e:\project\shadowblade-rc\server\command\reconnect.c
 	"../session.h"
 	"../config.h"
 
-1398048546 source:e:\project\shadowblade-rc\server\config.c
+1398130774 source:e:\project\shadowblade-rc\server\config.c
 	"config.h"
 	<stdio.h>
 
@@ -51,15 +51,16 @@
 
 1398049122 e:\project\shadowblade-rc\server\crypto\md5.h
 
-1398062671 source:e:\project\shadowblade-rc\server\server_main.c
+1398130774 source:e:\project\shadowblade-rc\server\server_main.c
 	"session.h"
 	"config.h"
 
-1398062687 source:e:\project\shadowblade-rc\server\session.c
+1398130774 source:e:\project\shadowblade-rc\server\session.c
 	"session.h"
 	"config.h"
+	<string.h>
 
-1398063240 source:e:\project\shadowblade-rc\server\socket_ctrl.c
+1398130774 source:e:\project\shadowblade-rc\server\socket_ctrl.c
 	"socket_ctrl.h"
 	<stdio.h>
 
@@ -137,4 +138,11 @@
 	"socket_func.h"
 	<windows.h>
 	<stdio.h>
+
+1398134217 source:e:\project\shadowblade-rc\server\crypto\rc4.c
+	"rc4.h"
+	<stdio.h>
+	<string.h>
+
+1398133163 e:\project\shadowblade-rc\server\crypto\rc4.h
 

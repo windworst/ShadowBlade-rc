@@ -1,8 +1,6 @@
 #include "../session.h"
 #include "../config.h"
 
-#define RECONNECT_BUFLEN 8192
-
 //in newconnect.c
 extern SOCKET get_new_connect(SOCKET s,const char* command);
 

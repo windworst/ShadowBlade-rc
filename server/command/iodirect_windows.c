@@ -79,7 +79,7 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
 	SOCKET s = *(SOCKET*)&tmp[1];
 	HANDLE proc = *(HANDLE*)&tmp[2];
 	DWORD t;
-	char buf[IODIRECT_READBUF+1];
+	char buf[IODIRECT_READBUF];
 	while(PeekNamedPipe(out,buf,IODIRECT_READBUF,&t,NULL,NULL))
 	{
 		//Check if Proc close
@@ -110,7 +110,7 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
 
 COMMAND_HANDLER_FUNC(ioredirect)
 {
-	char read_buf[IODIRECT_READBUF+1]={0};
+	char read_buf[IODIRECT_READBUF]={0};
 	HANDLE in=NULL,out=NULL,proc=NULL;
 	DWORD pid=0;
     int nread = 0;
