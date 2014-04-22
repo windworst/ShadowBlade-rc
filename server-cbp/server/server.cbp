@@ -38,9 +38,9 @@
 					<Add option="/subsystem:windows" />
 					<Add option="/entry:main" />
 					<Add option="/ALIGN:2048" />
+					<Add option="/FILEALIGN:1024" />
 					<Add library="kernel32.lib" />
 					<Add library="msvcrt.lib" />
-					<Add library="user32.lib" />
 				</Linker>
 			</Target>
 		</Build>
