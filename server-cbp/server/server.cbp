@@ -64,14 +64,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../server/config.h" />
-		<Unit filename="../../server/crypto/aes256.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../server/crypto/aes256.h" />
 		<Unit filename="../../server/crypto/md5.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../server/crypto/md5.h" />
+		<Unit filename="../../server/crypto/rc4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../server/crypto/rc4.h" />
 		<Unit filename="../../server/server_main.c">
 			<Option compilerVar="CC" />
 		</Unit>
