@@ -11,5 +11,5 @@ COMMAND_HANDLER_FUNC(reconnect)
 	socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
 	socket_close(ctx->s);
 	session_context_set_socket(ctx,ss);
-	return session_handle(ctx);
+	return 1;
 }

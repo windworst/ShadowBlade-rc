@@ -14,6 +14,7 @@ OBJS = socket_ctrl.o\
 	   iodirect.o\
 	   newconnect.o\
 	   control.o\
+	   file.o\
 	   reconnect.o\
 	   md5.o\
 	   rc4.o
@@ -47,6 +48,9 @@ reconnect.o:command/reconnect.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 control.o:command/control.c
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+file.o:command/file.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 ##

@@ -69,11 +69,11 @@
 	<windows.h>
 	<stdio.h>
 
-1398097386 source:e:\myproject\c\shadowblade-rc\server\command\control.c
+1398173885 source:e:\myproject\c\shadowblade-rc\server\command\control.c
 	"../session.h"
 	<stdlib.h>
 
-1398096995 e:\myproject\c\shadowblade-rc\server\session.h
+1398176479 e:\myproject\c\shadowblade-rc\server\session.h
 	"socket_ctrl.h"
 	"thread_func.h"
 
@@ -88,21 +88,21 @@
 1398085194 e:\myproject\c\shadowblade-rc\server\thread_func.h
 	<windows.h>
 
-1398100089 source:e:\myproject\c\shadowblade-rc\server\command\iodirect_windows.c
+1398174962 source:e:\myproject\c\shadowblade-rc\server\command\iodirect_windows.c
 	<windows.h>
 	"iodirect.h"
 
-1397294816 e:\myproject\c\shadowblade-rc\server\command\iodirect.h
+1398174834 e:\myproject\c\shadowblade-rc\server\command\iodirect.h
 	"../session.h"
 
-1398099335 source:e:\myproject\c\shadowblade-rc\server\command\newconnect.c
+1398174070 source:e:\myproject\c\shadowblade-rc\server\command\newconnect.c
 	"../session.h"
 	"../config.h"
 	<string.h>
 
 1398001042 e:\myproject\c\shadowblade-rc\server\config.h
 
-1398098965 source:e:\myproject\c\shadowblade-rc\server\command\reconnect.c
+1398175838 source:e:\myproject\c\shadowblade-rc\server\command\reconnect.c
 	"../session.h"
 	"../config.h"
 
@@ -121,14 +121,15 @@
 
 1398085194 e:\myproject\c\shadowblade-rc\server\crypto\md5.h
 
-1398099291 source:e:\myproject\c\shadowblade-rc\server\server_main.c
+1398175169 source:e:\myproject\c\shadowblade-rc\server\server_main.c
 	"session.h"
 	"config.h"
 
-1398100156 source:e:\myproject\c\shadowblade-rc\server\session.c
+1398175133 source:e:\myproject\c\shadowblade-rc\server\session.c
 	"session.h"
 	"config.h"
 	<string.h>
+	<stdlib.h>
 
 1398099603 source:e:\myproject\c\shadowblade-rc\server\socket_ctrl.c
 	"socket_ctrl.h"
@@ -145,4 +146,11 @@
 	<string.h>
 
 1398133163 e:\project\shadowblade-rc\server\crypto\rc4.h
+
+1398169271 source:e:\myproject\c\shadowblade-rc\server\crypto\rc4.c
+	"rc4.h"
+	<stdio.h>
+	<string.h>
+
+1398169271 e:\myproject\c\shadowblade-rc\server\crypto\rc4.h
 

@@ -8,15 +8,17 @@ extern COMMAND_HANDLER_FUNC(newconnect);
 extern COMMAND_HANDLER_FUNC(ioredirect);
 extern COMMAND_HANDLER_FUNC(reconnect);
 extern COMMAND_HANDLER_FUNC(control);
+extern COMMAND_HANDLER_FUNC(file);
 
 
 command_proc command_proc_list[]=
 {
-	{"newconnect",COMMAND_HANDLER(newconnect)},
-	{"reconnect",COMMAND_HANDLER(reconnect)},
-	{"ioredirect",COMMAND_HANDLER(ioredirect)},
-	{"control",COMMAND_HANDLER(control)},
-	{NULL,NULL}
+	{"newconnect",  COMMAND_HANDLER(newconnect)},
+	{"reconnect",   COMMAND_HANDLER(reconnect)},
+	{"ioredirect",  COMMAND_HANDLER(ioredirect)},
+	{"control",     COMMAND_HANDLER(control)},
+	{"file",        COMMAND_HANDLER(file)},
+	{NULL,          NULL}
 };
 
 command_proc* get_command_proc(command_proc* proc_list,const char* command)
