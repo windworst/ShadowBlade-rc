@@ -30,6 +30,8 @@ THREAD_CALLBACK_FUNC(listenport_proc)
 
 THREAD_CALLBACK_FUNC(connectport_proc)
 {
+    session_context ctx;
+    session_context_init(&ctx,SESSION_BUFFER_LEN);
 	while(1)
 	{
 		struct sockaddr sa;
@@ -41,9 +43,10 @@ THREAD_CALLBACK_FUNC(connectport_proc)
 		}
 		if(s!=-1)
 		{
+		    session_context_set_socket(&ctx,s);
 			if(session_verify(s,g_config.name,g_config.passwd))
 			{
-				session_handle(s);
+				session_handle(&ctx);
 			}
 			socket_close(s);
 		}
@@ -52,6 +55,7 @@ THREAD_CALLBACK_FUNC(connectport_proc)
 			time_wait(g_config.timewait*1000);
 		}
 	}
+	session_context_clean(&ctx);
 	return 0;
 }
 

@@ -1,7 +1,7 @@
 #include "session.h"
 #include "config.h"
 #include <string.h>
-
+#include <stdlib.h>
 #define COMMAND_LENGTH 512
 
 extern COMMAND_HANDLER_FUNC(newconnect);
@@ -33,34 +33,33 @@ command_proc* get_command_proc(command_proc* proc_list,const char* command)
 }
 
 //1 for success, 0 for failed, -1 command not found
-int command_switcher(SOCKET s,command_proc* proc_list,const char* command)
+int command_switcher(session_context *ctx,command_proc* proc_list,const char* command)
 {
     command_proc* proc = get_command_proc(proc_list,command);
     if(proc==NULL)
     {
         //undefined command
-        socket_send(s,COMMAND_RETURN_FALSE,1,0);
+        socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
         return -1;
     }
 
     command+=strlen(proc->command);
     while(*command==':')++command;
-    return proc->proc(s,command);
+    return proc->proc(ctx,command);
 }
 
-int session_handle(SOCKET s)
+int session_handle(session_context *ctx)
 {
 	//Set KeepAlive
-	set_keepalive(s,g_config.timeout);
+	set_keepalive(ctx->s,g_config.timeout);
 	while(1)
 	{
-		char command[COMMAND_LENGTH+1]={0};
-		if(socket_recv(s,command,COMMAND_LENGTH,0)<=0)
+		if(session_recv(ctx)<=0)
 		{
 			break;
 		}
 		//Quit
-		if(command_switcher(s,command_proc_list,command)==0)
+		if(command_switcher(ctx,command_proc_list,ctx->buffer)==0)
         {
             return 1;
         }
@@ -77,8 +76,12 @@ int session_verify(SOCKET s,const char* name, const char* pass)
 
 THREAD_CALLBACK_FUNC(session_handle_inthread)
 {
-	SOCKET s = (SOCKET)arg;
-	session_handle(s);
+    SOCKET s = (SOCKET)arg;
+    session_context ctx;
+    session_context_init(&ctx,SESSION_BUFFER_LEN);
+    session_context_set_socket(&ctx,s);
+	session_handle(&ctx);
 	socket_close(s);
+	session_context_clean(&ctx);
 	return 0;
 }

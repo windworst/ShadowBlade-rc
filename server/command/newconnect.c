@@ -63,7 +63,7 @@ SOCKET get_new_connect(SOCKET s,const char* command)
 }
 COMMAND_HANDLER_FUNC(newconnect)
 {
-    SOCKET ss = get_new_connect(s,command);
+    SOCKET ss = get_new_connect(ctx->s,command);
     if(ss!=-1)
 	{
 		thread_instance t;

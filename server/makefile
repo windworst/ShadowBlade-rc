@@ -1,7 +1,7 @@
 CC=gcc
 
-ALIGN = -Wl,--file-alignment,0x0080 \
-		-Wl,--section-alignment,0x0080 
+ALIGN = -Wl,--file-alignment,0x0200 \
+		-Wl,--section-alignment,0x0200 
 
 CFLAGS=-Os -s
 LFLAGS=-Os -s -fmerge-all-constants  -mwindows #$(ALIGN)

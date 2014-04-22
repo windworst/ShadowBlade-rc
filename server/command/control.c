@@ -17,7 +17,7 @@ static command_proc control_command_proc_list[]=
 
 COMMAND_HANDLER_FUNC(control)
 {
-	return command_switcher(s,control_command_proc_list,command);
+	return command_switcher(ctx,control_command_proc_list,command);
 }
 
 

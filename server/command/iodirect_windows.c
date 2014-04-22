@@ -110,25 +110,23 @@ static DWORD WINAPI ReadEchoToSocket(void*p)
 
 COMMAND_HANDLER_FUNC(ioredirect)
 {
-	char read_buf[IODIRECT_READBUF]={0};
 	HANDLE in=NULL,out=NULL,proc=NULL;
 	DWORD pid=0;
     int nread = 0;
-	sscanf(command,"%s",read_buf);
-	proc= RedirectStreamOpen(read_buf,&in,&out,&pid);
+	proc= RedirectStreamOpen((char*)command,&in,&out,&pid);
 	if(proc==NULL)
 	{
 		//Redirect Stream failed
-		socket_send(s,COMMAND_RETURN_FALSE,1,0);
+		socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
 		return 1;
 	}
-	socket_send(s,COMMAND_RETURN_TRUE,1,0);
+	socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
 
 	//Send Handle and socket to thread
 	{
         int tmp[3];
         tmp[0] = *(int*)&out;
-        tmp[1] = *(int*)&s;
+        tmp[1] = *(int*)&(ctx->s);
         tmp[2] = *(int*)&proc;
         //Create read echo thread
         CloseHandle(CreateThread(NULL,0,ReadEchoToSocket,tmp,0,NULL));
@@ -136,10 +134,10 @@ COMMAND_HANDLER_FUNC(ioredirect)
 	}
 
 	//Get remote command
-	while(nread = socket_recv(s,read_buf,IODIRECT_READBUF,0),nread>0)
+	while(nread = session_recv(ctx),nread>0)
 	{
 		DWORD t;
-		if(!WriteFile(in,read_buf,nread,&t,NULL))
+		if(!WriteFile(in,ctx->buffer,ctx->data_len,&t,NULL))
 		{
 			break;
 		}
