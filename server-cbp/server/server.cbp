@@ -26,7 +26,7 @@
 				<Option output="bin/Release/server" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
-				<Option compiler="vc60" />
+				<Option compiler="vc_60" />
 				<Compiler>
 					<Add option="/Gm" />
 					<Add option="/O1" />
@@ -37,8 +37,6 @@
 				<Linker>
 					<Add option="/subsystem:windows" />
 					<Add option="/entry:main" />
-					<Add option="/ALIGN:2048" />
-					<Add option="/FILEALIGN:1024" />
 					<Add library="kernel32.lib" />
 					<Add library="msvcrt.lib" />
 				</Linker>
@@ -48,6 +46,9 @@
 			<Add option="/W3" />
 		</Compiler>
 		<Unit filename="../../server/command/control.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../server/command/file.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../server/command/iodirect.h" />
