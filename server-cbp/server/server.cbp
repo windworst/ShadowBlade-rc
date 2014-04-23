@@ -51,8 +51,7 @@
 		<Unit filename="../../server/command/file.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../server/command/iodirect.h" />
-		<Unit filename="../../server/command/iodirect_windows.c">
+		<Unit filename="../../server/command/ioredirect.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../server/command/newconnect.c">
