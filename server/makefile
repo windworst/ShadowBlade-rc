@@ -63,4 +63,4 @@ md5.o:crypto/md5.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
-	rm *.o *.exe *.dll
+	rm -f *.o *.exe *.dll
