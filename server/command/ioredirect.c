@@ -1,5 +1,9 @@
+#include "../session.h"
+
+#define IODIRECT_READBUF 8192
+#define IODIRECT_TIMEWAIT 50
+
 #include <windows.h>
-#include "iodirect.h"
 
 /*!
  * @brief:			Stdio && stdout redirect

@@ -11,7 +11,7 @@ OBJS = socket_ctrl.o\
 	   session.o\
 	   config.o\
 	   server_main.o\
-	   iodirect.o\
+	   ioredirect.o\
 	   newconnect.o\
 	   control.o\
 	   file.o\
@@ -38,7 +38,7 @@ $(DLL_FILE):$(OBJS)
 
 #command module
 
-iodirect.o:command/iodirect_windows.c
+ioredirect.o:command/ioredirect.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 newconnect.o:command/newconnect.c
