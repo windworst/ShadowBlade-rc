@@ -6,7 +6,7 @@
 
 #define FILE_BUF_LEN 1024*1024
 
-void handle_session_putfile(session_context* ctx,FILE_HANDLE fh)
+void handle_session_getfile(session_context* ctx,FILE_HANDLE fh)
 {
     char *file_buf = (char*)malloc(sizeof(char)*FILE_BUF_LEN);
     int file_buf_len  = FILE_BUF_LEN;
@@ -49,7 +49,7 @@ void handle_session_putfile(session_context* ctx,FILE_HANDLE fh)
     free(file_buf);
 }
 
-void handle_session_getfile(session_context* ctx,FILE_HANDLE fh)
+void handle_session_putfile(session_context* ctx,FILE_HANDLE fh)
 {
     char *file_buf = (char*)malloc(sizeof(char)*FILE_BUF_LEN);
     int file_buf_len  = FILE_BUF_LEN;
@@ -85,16 +85,35 @@ void handle_session_getfile(session_context* ctx,FILE_HANDLE fh)
             file_write(fh,file_buf,buf_nrecv);
             buf_nrecv = 0;
         }
+        socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
     }
     free(file_buf);
 }
 
 COMMAND_HANDLER_FUNC(ls)
 {
+    file_finddata_t ff;
+    int fd = file_findfirst(command,&ff);
+    if(fd==-1)
+    {
+        socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
+        return 1;
+    }
+    socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
+    do
+    {
+        uint64_t filesize = ff.size;
+        sprintf(ctx->buffer,"%s|%lld|%d|%d|%d|%d\n",
+                ff.name,filesize,ff.attrib,ff.time_access,ff.time_create,ff.time_write);
+        session_send(ctx,strlen(ctx->buffer));
+    }
+    while(file_findnext(fd,&ff)==0);
+    socket_send(ctx->s,"\n",1,0);
+    file_findclose(fd);
 	return 1;
 }
 
-COMMAND_HANDLER_FUNC(get)
+COMMAND_HANDLER_FUNC(put)
 {
     FILE_HANDLE fh = file_open(command,FILE_ACCESS_WRITE,FILE_OPEN_CREATE);
     if(fh==INVALID_FILEHANDLE_VALUE)
@@ -103,13 +122,13 @@ COMMAND_HANDLER_FUNC(get)
         return 1;
     }
     socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
-    handle_session_getfile(ctx,fh);
+    handle_session_putfile(ctx,fh);
     socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
     file_close(fh);
 	return 1;
 }
 
-COMMAND_HANDLER_FUNC(put)
+COMMAND_HANDLER_FUNC(get)
 {
     FILE_HANDLE fh = file_open(command,FILE_ACCESS_READ,FILE_OPEN_EXIST);
     if(fh==INVALID_FILEHANDLE_VALUE)
@@ -118,7 +137,7 @@ COMMAND_HANDLER_FUNC(put)
         return 1;
     }
     socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
-    handle_session_putfile(ctx,fh);
+    handle_session_getfile(ctx,fh);
     socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
     file_close(fh);
 	return 1;

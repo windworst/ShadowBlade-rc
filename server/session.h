@@ -36,7 +36,7 @@ typedef struct
     (ctx_ptr)->s = (sockfd),(ctx_ptr)\
 )
 
-#define session_send(ctx_ptr) ((ctx_ptr)->data_len = socket_send((ctx_ptr)->s,(ctx_ptr)->buffer,(ctx_ptr)->data_len,0))
+#define session_send(ctx_ptr,send_len) ((ctx_ptr)->data_len = socket_send((ctx_ptr)->s,(ctx_ptr)->buffer,(send_len),0))
 #define session_recv(ctx_ptr) ((ctx_ptr)->data_len = socket_recv((ctx_ptr)->s,(ctx_ptr)->buffer,(ctx_ptr)->buffer_len,0))
 
 int session_handle(session_context *ctx);

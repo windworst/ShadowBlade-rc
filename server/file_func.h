@@ -1,5 +1,7 @@
 #pragma once
 
+#include <io.h>
+
 #define FILE_WINDOWS
 
 //Windows
@@ -36,6 +38,12 @@ uint64_t file_getsize(FILE_HANDLE fh);
 
 void file_close(FILE_HANDLE fh);
 
+//Dir
 
+typedef struct _finddata_t file_finddata_t;
 
+#define file_findfirst _findfirst
 
+#define file_findnext _findnext
+
+#define file_findclose _findclose
