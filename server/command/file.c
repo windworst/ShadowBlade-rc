@@ -59,6 +59,7 @@ void handle_session_getfile(session_context* ctx,FILE_HANDLE fh)
         uint64_t offset = 0;
         uint64_t len = 0;
         uint64_t total = 0;
+        int32_t buf_nrecv = 0;
 
         if(sscanf(ctx->buffer,"%lld:%lld",&offset,&len)!=2 || len==0)
         {
@@ -67,7 +68,22 @@ void handle_session_getfile(session_context* ctx,FILE_HANDLE fh)
         file_seek(fh,offset,SEEK_SET);
         while(total<len)
         {
+            int32_t nrecv = ctx->buffer_len > (file_buf_len - buf_nrecv) ? (file_buf_len - buf_nrecv) : ctx->buffer_len;
+            int32_t read_len = socket_recv(ctx->s,file_buf+buf_nrecv,nrecv,0);
+            buf_nrecv += read_len;
             total += read_len;
+
+            //Write to Disk
+            if(buf_nrecv==file_buf_len)
+            {
+                file_write(fh,file_buf,buf_nrecv);
+                buf_nrecv = 0;
+            }
+        }
+        if(buf_nrecv>0)
+        {
+            file_write(fh,file_buf,buf_nrecv);
+            buf_nrecv = 0;
         }
     }
     free(file_buf);
