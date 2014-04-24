@@ -72,6 +72,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../server/crypto/rc4.h" />
+		<Unit filename="../../server/file_func.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../server/file_func.h" />
 		<Unit filename="../../server/server_main.c">
 			<Option compilerVar="CC" />
 		</Unit>
