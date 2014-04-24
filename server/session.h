@@ -33,7 +33,7 @@ typedef struct
 
 #define session_context_set_socket(ctx_ptr,sockfd)\
 (\
-    (ctx_ptr)->s = (sockfd)\
+    (ctx_ptr)->s = (sockfd),(ctx_ptr)\
 )
 
 #define session_send(ctx_ptr) ((ctx_ptr)->data_len = socket_send((ctx_ptr)->s,(ctx_ptr)->buffer,(ctx_ptr)->data_len,0))

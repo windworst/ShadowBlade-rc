@@ -60,7 +60,7 @@ int session_handle(session_context *ctx)
 		{
 			break;
 		}
-		//Quit
+        ctx->buffer[ctx->data_len-1]=0;
 		if(command_switcher(ctx,command_proc_list,ctx->buffer)==0)
         {
             return 1;
