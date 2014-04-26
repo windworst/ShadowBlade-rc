@@ -17,6 +17,9 @@ void MainWindow::InitUI()
 {
     this->setWindowTitle(QString(PRODUCT_NAME)+" "+QString(PRODUCT_VERSION));
     this->setWindowIcon(QIcon(":/img/shadowblade.ico"));
+
+    //ui->splitter_h1->setStretchFactor(1,5);
+    //ui->splitter_v1->setStretchFactor(3,5);
 }
 
 MainWindow::~MainWindow()
