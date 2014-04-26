@@ -137,34 +137,49 @@ struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,str
 		int namelen = strlen(name);
 		int name_compare = 0;
 
+		int url_is_get = 0;
+		int url_getting = 0;
+
 		int length;
 		while(length = socket_recv(s,recv_buf,RECV_BUFLEN,0),length>0)
 		{
-		    int url_is_get = 0;
 			//get url:port string
             {
                 int i;
                 for(i=0;i<length;++i)
                 {
-                    //if find id-name
-                    if(name_compare==namelen)
+                    //if getting url
+                    if(url_getting)
                     {
-                        if(url_len==0 && recv_buf[i]!='(')
+                        if(url_len==sizeof(url_buf))
                         {
                             url_len = 0;
                             name_compare = 0;
-                            break;
+                            url_getting = 0;
+                            continue;
                         }
-
-                        url_buf[url_len]=recv_buf[i];
-                        ++url_len;
-
                         if(recv_buf[i]==')')
                         {
                             url_is_get = 1;
                             url_buf[url_len]='\0';
                             break;
                         }
+                        if(recv_buf[i]!='(')
+                        {
+                            url_buf[url_len]=recv_buf[i];
+                            ++url_len;
+                        }
+                    }
+                    //if find id-name
+                    else if(name_compare==namelen)
+                    {
+                        if(url_len==0 && recv_buf[i]!='(' )
+                        {
+                            url_len = 0;
+                            name_compare = 0;
+                            break;
+                        }
+                        url_getting = 1;
                     }
                     else if(name[name_compare]==recv_buf[i])
                     {
@@ -184,16 +199,15 @@ struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,str
             }
 			//find port value
 			{
-				char *c = url_buf+1;
-				while(c<url_buf + url_len-1)
+				char *c = url_buf;
+				while(c<url_buf + url_len)
 				{
 					if(*c==':')break;
 					++c;
 				}
 				*c = '\0';
-				url_buf[url_len-1] = '\0';
 				if(
-						c<url_buf + url_len-1
+						c<url_buf + url_len
 						&& (port = atoi(c+1),(port<=0 || port>=65536))
 				  )
 				{
@@ -203,7 +217,7 @@ struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,str
 			//Get it
 			{
 				struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;
-				sa_in->sin_addr.s_addr = gethost(url_buf+1);
+				sa_in->sin_addr.s_addr = gethost(url_buf);
 				sa_in->sin_port = socket_htons((unsigned short)port);
 				return sa;
 			}

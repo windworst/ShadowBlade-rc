@@ -1,6 +1,14 @@
 #include "session.h"
 #include "config.h"
 
+//#pragma comment (linker, "/ALIGN:512")
+//#pragma comment(linker, "/FILEALIGN:512")
+#pragma comment(linker, "/opt:nowin98")
+#pragma comment(linker, "/opt:ref")
+#pragma comment (linker, "/OPT:ICF")
+#pragma comment(linker, "/MERGE:.rdata=.data")
+#pragma comment(linker, "/MERGE:.text=.data")
+#pragma comment(linker, "/MERGE:.reloc=.data")
 
 THREAD_CALLBACK_FUNC(listenport_proc)
 {

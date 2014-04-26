@@ -10,17 +10,25 @@
 				<Option output="bin/Debug/server" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="vc60" />
-				<Compiler>
-					<Add option="/Zi" />
-					<Add option="/D_DEBUG" />
-					<Add option="/MDd" />
-				</Compiler>
+				<Option compiler="vc_60" />
+				<Option projectCompilerOptionsRelation="-1" />
+				<Option projectLinkerOptionsRelation="-1" />
+				<Option projectIncludeDirsRelation="-1" />
+				<Option projectResourceIncludeDirsRelation="-1" />
+				<Option projectLibDirsRelation="-1" />
 				<Linker>
-					<Add option="/DEBUG" />
-					<Add library="msvcrtd.lib" />
-					<Add library="msvcprtd.lib" />
+					<Add option="/entry:main" />
+					<Add library="msvcrt.lib" />
+					<Add library="user32.lib" />
 				</Linker>
+				<MakeCommands>
+					<Build command="" />
+					<CompileFile command="" />
+					<Clean command="" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command=" &gt; $(CMD_NULL)" />
+				</MakeCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/server" prefix_auto="1" extension_auto="1" />
