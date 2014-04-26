@@ -73,6 +73,7 @@ ioredirect
 	ioredirect::cmd.exe
 
 file
+
 	文件管理类命令，具有数个子命令
 
 	上传文件命令
