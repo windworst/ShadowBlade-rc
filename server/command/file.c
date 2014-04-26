@@ -70,6 +70,10 @@ void handle_session_putfile(session_context* ctx,FILE_HANDLE fh)
         {
             int32_t nrecv = ctx->buffer_len > (file_buf_len - buf_nrecv) ? (file_buf_len - buf_nrecv) : ctx->buffer_len;
             int32_t read_len = socket_recv(ctx->s,file_buf+buf_nrecv,nrecv,0);
+            if(read_len<=0)
+            {
+                break;
+            }
             buf_nrecv += read_len;
             total += read_len;
 
