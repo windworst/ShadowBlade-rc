@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>shadowblade.ico</file>
+    </qresource>
+</RCC>

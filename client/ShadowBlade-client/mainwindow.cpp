@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::InitUI()
 {
     this->setWindowTitle(QString(PRODUCT_NAME)+" "+QString(PRODUCT_VERSION));
+    this->setWindowIcon(QIcon(":/img/shadowblade.ico"));
 }
 
 MainWindow::~MainWindow()
