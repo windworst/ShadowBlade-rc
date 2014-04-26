@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>887</width>
+    <height>604</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ShadowBlade</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>887</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionConnect_host"/>
+    <addaction name="actionListen_on_Port"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="action_Setting"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help_2">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_Tips"/>
+    <addaction name="action_About"/>
+   </widget>
+   <widget class="QMenu" name="menu_Tool">
+    <property name="title">
+     <string>&amp;Tool</string>
+    </property>
+    <addaction name="action_Connect_Test"/>
+    <addaction name="action_Server_Config"/>
+    <addaction name="separator"/>
+    <addaction name="actionOption"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Help"/>
+   <addaction name="menu_Tool"/>
+   <addaction name="menu_Help_2"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>BottomToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionConnect_host">
+   <property name="text">
+    <string>&amp;Connect host</string>
+   </property>
+  </action>
+  <action name="actionListen_on_Port">
+   <property name="text">
+    <string>&amp;Listen on Port</string>
+   </property>
+  </action>
+  <action name="action_Setting">
+   <property name="text">
+    <string>&amp;Setting</string>
+   </property>
+  </action>
+  <action name="actionServer_Config">
+   <property name="text">
+    <string>&amp;Server Config</string>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Tips">
+   <property name="text">
+    <string>&amp;Tips</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_Connect_Test">
+   <property name="text">
+    <string>&amp;Connect Test</string>
+   </property>
+  </action>
+  <action name="action_Server_Config">
+   <property name="text">
+    <string>&amp;Server Config</string>
+   </property>
+  </action>
+  <action name="actionOption">
+   <property name="text">
+    <string>Option</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
