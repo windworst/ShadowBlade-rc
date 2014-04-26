@@ -94,7 +94,7 @@ struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,str
 	//Connect HTTP server
 	SOCKET s = -1;
 	int port = 80;
-	char url_buf[URL_LEN] = {0};
+	char url_buf[URL_LEN+20] = {0};
 	int url_len = strlen(url);
 
 	char * host = NULL;
@@ -130,49 +130,80 @@ struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,str
 		socket_send(s,sndstr,strlen(sndstr)+1,0);
 	}
 
+    url_len = 0;
 	//Read page Data
 	{
-		char recv_buf[RECV_BUFLEN+1]={0};
+		char recv_buf[RECV_BUFLEN]={0};
 		int namelen = strlen(name);
+		int name_compare = 0;
+
 		int length;
 		while(length = socket_recv(s,recv_buf,RECV_BUFLEN,0),length>0)
 		{
-			char *addr,*end;
-			recv_buf[length]='\0';
-			//get string start & end;
-			if(
-					(addr = strstr(recv_buf,name),addr==NULL)
-					|| addr[namelen] != '('
-					||(end = strstr(addr,")"),end==NULL)
-			  )
-				continue;
+		    int url_is_get = 0;
+			//get url:port string
+            {
+                int i;
+                for(i=0;i<length;++i)
+                {
+                    //if find id-name
+                    if(name_compare==namelen)
+                    {
+                        if(url_len==0 && recv_buf[i]!='(')
+                        {
+                            url_len = 0;
+                            name_compare = 0;
+                            break;
+                        }
 
-			//if find
-			addr += namelen+1;
+                        url_buf[url_len]=recv_buf[i];
+                        ++url_len;
 
+                        if(recv_buf[i]==')')
+                        {
+                            url_is_get = 1;
+                            url_buf[url_len]='\0';
+                            break;
+                        }
+                    }
+                    else if(name[name_compare]==recv_buf[i])
+                    {
+                        ++name_compare;
+                    }
+                    else
+                    {
+                        name_compare = 0;
+                    }
+                }
+
+            }
+
+            if(!url_is_get)
+            {
+                continue;
+            }
 			//find port value
 			{
-				char *c = addr;
-				while(c<end)
+				char *c = url_buf+1;
+				while(c<url_buf + url_len-1)
 				{
 					if(*c==':')break;
 					++c;
 				}
-				*end = '\0';
 				*c = '\0';
+				url_buf[url_len-1] = '\0';
 				if(
-						c<end
+						c<url_buf + url_len-1
 						&& (port = atoi(c+1),(port<=0 || port>=65536))
 				  )
 				{
 					continue;
 				}
 			}
-
 			//Get it
 			{
 				struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;
-				sa_in->sin_addr.s_addr = gethost(addr);
+				sa_in->sin_addr.s_addr = gethost(url_buf+1);
 				sa_in->sin_port = socket_htons((unsigned short)port);
 				return sa;
 			}
