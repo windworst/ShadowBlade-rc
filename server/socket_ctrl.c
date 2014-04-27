@@ -1,5 +1,9 @@
 #include "socket_ctrl.h"
 
+#ifdef SERVER_DEBUG
+#define SOCKET_CTRL_DEBUG
+#endif // SERVER_DEBUG
+
 void set_keepalive(SOCKET s,int timeout)
 {
 	;
@@ -214,6 +218,10 @@ struct sockaddr* get_sockaddr_by_url(const char* url,char* name,int timewait,str
 					continue;
 				}
 			}
+
+			#ifdef SOCKET_CTRL_DEBUG
+			printf("get_sockaddr_by_url(%s,%d):\n\t url=\"%s:%d\"\n",__FILE__,__LINE__,url_buf,port);
+			#endif // SOCKET_CTRL_DEBUG
 			//Get it
 			{
 				struct sockaddr_in * sa_in = (struct sockaddr_in *)sa;

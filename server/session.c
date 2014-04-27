@@ -10,6 +10,9 @@ extern COMMAND_HANDLER_FUNC(reconnect);
 extern COMMAND_HANDLER_FUNC(control);
 extern COMMAND_HANDLER_FUNC(file);
 
+#ifdef SERVER_DEBUG
+#define SESSION_DEBUG
+#endif // SERVER_DEBUG
 
 command_proc command_proc_list[]=
 {
@@ -28,6 +31,9 @@ command_proc* get_command_proc(command_proc* proc_list,const char* command)
 	{
 		if(strncmp(command,proc_list[i].command,strlen(proc_list[i].command))==0)
 		{
+		    #ifdef SESSION_DEBUG
+            printf("get_command_proc(%s,%d):\n\t command=\"%s\"\n",__FILE__,__LINE__,command);
+            #endif // SESSION_DEBUG
 			return &proc_list[i];
 		}
 	}
@@ -44,7 +50,9 @@ int command_switcher(session_context *ctx,command_proc* proc_list,const char* co
         socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
         return -1;
     }
-
+    #ifdef SESSION_DEBUG
+    printf("command_switcher(%s,%d):\n\t command=\"%s\", command accept\n",__FILE__,__LINE__,command);
+    #endif // SESSION_DEBUG
     command+=strlen(proc->command);
     while(*command==':')++command;
     return proc->proc(ctx,command);

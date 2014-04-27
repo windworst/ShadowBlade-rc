@@ -158,7 +158,7 @@
 	"../session.h"
 	<stdlib.h>
 
-1398358945 e:\myproject\c\shadowblade-rc\shadowblade-rc\server\session.h
+1398595896 e:\myproject\c\shadowblade-rc\shadowblade-rc\server\session.h
 	"socket_ctrl.h"
 	"thread_func.h"
 
@@ -173,7 +173,7 @@
 1398085194 e:\myproject\c\shadowblade-rc\shadowblade-rc\server\thread_func.h
 	<windows.h>
 
-1398360156 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\command\file.c
+1398608924 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\command\file.c
 	"../session.h"
 	<stdio.h>
 	<stdlib.h>
@@ -215,13 +215,13 @@
 	"session.h"
 	"config.h"
 
-1398346607 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\session.c
+1398597420 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\session.c
 	"session.h"
 	"config.h"
 	<string.h>
 	<stdlib.h>
 
-1398494168 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\socket_ctrl.c
+1398597446 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\socket_ctrl.c
 	"socket_ctrl.h"
 	<stdio.h>
 
@@ -230,9 +230,10 @@
 	<windows.h>
 	<stdio.h>
 
-1398359301 e:\myproject\c\shadowblade-rc\shadowblade-rc\server\file_func.h
+1398603740 e:\myproject\c\shadowblade-rc\shadowblade-rc\server\file_func.h
+	<direct.h>
+	<fcntl.h>
 	<io.h>
-	<windows.h>
 
 1398346366 source:e:\myproject\c\shadowblade-rc\shadowblade-rc\server\file_func.c
 	"file_func.h"

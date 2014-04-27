@@ -1,49 +1,43 @@
 #pragma once
 
+#define __USE_FILE_OFFSET64
+#define __USE_LARGEFILE64
+#define _LARGEFILE64_SOURCE
+
+#include <direct.h>
+#include <fcntl.h>
 #include <io.h>
 
-#define FILE_WINDOWS
-
-//Windows
-#ifdef FILE_WINDOWS
-#include <windows.h>
-#define uint32_t DWORD
+#define uint32_t unsigned long
 #define int32_t  long
-#define uint64_t DWORDLONG
-typedef HANDLE FILE_HANDLE;
-#define INVALID_FILEHANDLE_VALUE INVALID_HANDLE_VALUE
+#define uint64_t __int64
 
-enum FILE_ACCESS_MODE{
-    FILE_ACCESS_READ = GENERIC_READ,
-    FILE_ACCESS_WRITE = GENERIC_WRITE
-};
-
-enum OPEN_MODE{
-    FILE_OPEN_CREATE=OPEN_ALWAYS,
-    FILE_OPEN_EXIST=OPEN_EXISTING
-};
-
-#endif
+#define FILE_HANDLE int
+#define INVALID_FILEHANDLE_VALUE -1
 
 //Function
-FILE_HANDLE file_open(const char* path, uint32_t access_mode, uint32_t open_mode);
+#define file_open _open
 
-uint32_t file_read(FILE_HANDLE fh,void* buf, uint32_t len);
+#define file_read _read
 
-uint32_t file_write(FILE_HANDLE fh,const void* buf, uint32_t len);
+#define file_write _write
 
-uint64_t file_seek(FILE_HANDLE fh,uint64_t offset,int mode);
+#define file_seek _lseeki64
 
-uint64_t file_getsize(FILE_HANDLE fh);
+#define file_close _close
 
-void file_close(FILE_HANDLE fh);
+#define file_remove remove
 
 //Dir
 
 typedef struct _finddata_t file_finddata_t;
 
-#define file_findfirst _findfirst
+#define dir_findfirst _findfirst
 
-#define file_findnext _findnext
+#define dir_findnext _findnext
 
-#define file_findclose _findclose
+#define dir_findclose _findclose
+
+#define dir_mkdir _mkdir
+
+#define dir_rmdir _rmdir
