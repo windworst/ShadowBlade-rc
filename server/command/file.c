@@ -121,22 +121,35 @@ enum TRAVER_OPERATE
     TRAVER_LSTREE = 1,
     TRAVER_REMOVE = 2,
 };
+
+int usable_name(const char* name,int name_len)
+{
+    return (strncmp(name,".",name_len)!=0
+            && strncmp(name,"..",name_len)!=0);
+}
+
+void send_file_info(SOCKET s,file_finddata_t *p_ff)
+{
+    char buffer[FILE_PATH_LEN]={0};
+    uint64_t filesize = p_ff->size;
+    sprintf(buffer,"<%s|%lld|%d|%d|%d|%d>\n",
+            p_ff->name,filesize,p_ff->attrib,p_ff->time_access,p_ff->time_create,p_ff->time_write);
+    socket_send(s,buffer,strlen(buffer),0);
+}
+
 int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code)
 {
-    struct _finddata_t ff;
+    file_finddata_t ff;
     FILE_HANDLE fd = INVALID_FILEHANDLE_VALUE;
     int count = 0;
 
     if(path_len>=FILE_PATH_LEN)return 0;
 
-	while(path_len-1>0 && (path[path_len-1]=='/'||path[path_len-1]=='\\'))
 	{
-		--path_len;
+	    memcpy(path+path_len,"/*",3);
+        fd = dir_findfirst(path,&ff);
+        path[path_len] = '\0';
 	}
-
-	memcpy(path+path_len,"/*",3);
-    fd = _findfirst(path,&ff);
-    path[path_len] = '\0';
 
 	if(fd==INVALID_FILEHANDLE_VALUE)
     {
@@ -150,8 +163,7 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 	{
 	    int name_len = strlen(ff.name);
 
-		if(	strncmp(ff.name,".",name_len)==0
-				|| strncmp(ff.name,"..",name_len)==0)
+		if(	!usable_name(ff.name,name_len) )
 		{
 			continue;
 		}
@@ -164,11 +176,7 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 
         if(operation_code!=TRAVER_REMOVE)
         {
-            char buffer[FILE_PATH_LEN]={0};
-            uint64_t filesize = ff.size;
-            sprintf(buffer,"<%s|%lld|%d|%d|%d|%d>\n",
-                ff.name,filesize,ff.attrib,ff.time_access,ff.time_create,ff.time_write);
-            socket_send(ctx->s,buffer,strlen(buffer),0);
+            send_file_info(ctx->s,&ff);
         }
 
         if(path_len+name_len+1>=FILE_PATH_LEN)return 0;
@@ -200,7 +208,7 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 
         path[path_len] = '\0';
 	}
-	while(_findnext(fd,&ff)==0);
+	while(dir_findnext(fd,&ff)==0);
 
 	dir_findclose(fd);
 
@@ -220,14 +228,46 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 COMMAND_HANDLER_FUNC(ls)
 {
     int operation_code = 0;
-    if(command[0]=='|')
+    file_finddata_t ff;
+    FILE_HANDLE fd = INVALID_FILEHANDLE_VALUE;
+    char *path = (char*) command;
+    int path_len = strlen(path);
+
+    //Check traversal flag;
+    if(path[0]=='|')
     {
         operation_code = TRAVER_LSTREE;
-        ++command;
+        ++path;
+        --path_len;
     }
 
+    //Remove back '/'
+	while(path_len-1>0 && (path[path_len-1]=='/'||path[path_len-1]=='\\'))
+	{
+		--path_len;
+	}
+	path[path_len] = '\0';
+
+    fd = dir_findfirst(path,&ff);
+    if(fd==INVALID_FILEHANDLE_VALUE)
+    {
+        socket_send(ctx->s,COMMAND_RETURN_FALSE,1,0);
+        return 1;
+    }
     socket_send(ctx->s,COMMAND_RETURN_TRUE,1,0);
-    travesal_dir(ctx,(char*)command,strlen(command),operation_code);
+
+    do
+    {
+		if(	!usable_name(ff.name,strlen(ff.name)))
+		{
+			continue;
+		}
+        send_file_info(ctx->s,&ff);
+    }
+    while(dir_findnext(fd,&ff)==0);
+    dir_findclose(fd);
+
+    travesal_dir(ctx,(char*)path,path_len,operation_code);
 
 	return 1;
 }
