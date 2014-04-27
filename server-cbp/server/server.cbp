@@ -14,8 +14,10 @@
 				<Option projectCompilerOptionsRelation="-1" />
 				<Option projectLinkerOptionsRelation="-1" />
 				<Option projectIncludeDirsRelation="-1" />
-				<Option projectResourceIncludeDirsRelation="-1" />
 				<Option projectLibDirsRelation="-1" />
+				<Compiler>
+					<Add option="/DSERVER_DEBUG" />
+				</Compiler>
 				<Linker>
 					<Add option="/entry:main" />
 					<Add library="msvcrt.lib" />
@@ -35,6 +37,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="vc_60" />
+				<Option projectCompilerOptionsRelation="2" />
 				<Compiler>
 					<Add option="/Gm" />
 					<Add option="/O1" />
@@ -80,9 +83,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../server/crypto/rc4.h" />
-		<Unit filename="../../server/file_func.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../server/file_func.h" />
 		<Unit filename="../../server/server_main.c">
 			<Option compilerVar="CC" />
