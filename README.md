@@ -117,7 +117,7 @@ control
 	
 	控制命令,目前只写了一个
 
-	killyourself
+	control::killyourself
 	终结自身的进程
 
 
