@@ -168,16 +168,20 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 			continue;
 		}
 
-		if(count==0 && operation_code!=TRAVER_REMOVE)
-		{
-			socket_send(ctx->s,"[",1,0);
-		}
-		++count;
-
         if(operation_code!=TRAVER_REMOVE)
         {
+			if(count==0)
+			{
+				socket_send(ctx->s,"[",1,0);
+			}
+			else
+			{
+				socket_send(ctx->s,",",1,0);
+			}
             send_file_info(ctx->s,&ff);
         }
+
+		++count;
 
         if(path_len+name_len+1>=FILE_PATH_LEN)return 0;
         path[path_len] = '/';
@@ -188,6 +192,10 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
             #ifdef FILE_DEBUG
             printf("travesal_dir(%s,%d):\n\t into path=\"%s\"\n",__FILE__,__LINE__,path);
             #endif // FILE_DEBUG
+			if(count>1)
+			{
+				socket_send(ctx->s,",",1,0);
+			}
             count += travesal_dir(ctx,path,path_len+name_len+1,operation_code);
         }
 
@@ -263,6 +271,7 @@ COMMAND_HANDLER_FUNC(ls)
 			continue;
 		}
         send_file_info(ctx->s,&ff);
+		socket_send(ctx->s,",",1,0);
     }
     while(dir_findnext(fd,&ff)==0);
     dir_findclose(fd);
