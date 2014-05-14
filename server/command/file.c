@@ -132,7 +132,7 @@ void send_file_info(SOCKET s,file_finddata_t *p_ff)
 {
     char buffer[FILE_PATH_LEN]={0};
     uint64_t filesize = p_ff->size;
-    sprintf(buffer,"<%s|%lld|%d|%d|%d|%d>\n",
+    sprintf(buffer,"[\"%s\",%lld,%d,%d,%d,%d]",
             p_ff->name,filesize,p_ff->attrib,p_ff->time_access,p_ff->time_create,p_ff->time_write);
     socket_send(s,buffer,strlen(buffer),0);
 }
@@ -170,7 +170,7 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 
 		if(count==0 && operation_code!=TRAVER_REMOVE)
 		{
-			socket_send(ctx->s,"{",1,0);
+			socket_send(ctx->s,"[",1,0);
 		}
 		++count;
 
@@ -214,7 +214,7 @@ int travesal_dir(session_context* ctx,char* path,int path_len,int operation_code
 
 	if(count!=0 && operation_code!=TRAVER_REMOVE)
 	{
-		socket_send(ctx->s,"}",1,0);
+		socket_send(ctx->s,"]",1,0);
 	}
 
 	if(operation_code==TRAVER_REMOVE)
@@ -334,3 +334,4 @@ COMMAND_HANDLER_FUNC(file)
 {
 	return command_switcher(ctx,file_command_proc_list,command);
 }
+
